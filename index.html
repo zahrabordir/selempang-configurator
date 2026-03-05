@@ -131,8 +131,6 @@ button:disabled{
     flex-direction:column;
 }
 #fullCanvas{
-    max-width:90%;
-    max-height:90%;
     background:#fff;
 }
 #overlay span{
@@ -314,7 +312,7 @@ function updateMotif(){
     }
 }
 
-// SUBMIT & FULL SCREEN CANVAS
+// SUBMIT & FULL SCREEN CANVAS PROPORSIONAL
 function submitSelection(){
     const overlay = document.getElementById("overlay");
     const canvas = document.getElementById("fullCanvas");
@@ -322,9 +320,6 @@ function submitSelection(){
 
     overlay.style.display = "flex";
     overlay.querySelector("span").style.display = "block";
-
-    canvas.width = window.innerWidth*0.9;
-    canvas.height = window.innerHeight*0.9;
 
     const imgWarna = new Image();
     const imgModel = new Image();
@@ -343,6 +338,21 @@ function submitSelection(){
         img.onload = ()=>{
             loaded++;
             if(loaded === 3){
+                // hitung rasio model
+                const screenRatio = window.innerWidth / window.innerHeight;
+                const imgRatio = imgModel.width / imgModel.height;
+                let drawWidth, drawHeight;
+                if(imgRatio > screenRatio){
+                    drawWidth = window.innerWidth * 0.9;
+                    drawHeight = drawWidth / imgRatio;
+                } else {
+                    drawHeight = window.innerHeight * 0.9;
+                    drawWidth = drawHeight * imgRatio;
+                }
+
+                canvas.width = drawWidth;
+                canvas.height = drawHeight;
+
                 ctx.clearRect(0,0,canvas.width,canvas.height);
                 ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height);
                 ctx.drawImage(imgModel,0,0,canvas.width,canvas.height);
