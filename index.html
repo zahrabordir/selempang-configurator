@@ -73,12 +73,12 @@ button:disabled{
 /* MOTIF GRID - horizontal */
 .grid{
     display:flex;
-    flex-wrap:wrap; /* pindah baris jika tidak muat */
+    flex-wrap:wrap;
     gap:10px;
 }
 .thumb{
     display:flex;
-    flex-direction:column; /* gambar di atas, nama di bawah */
+    flex-direction:column;
     align-items:center;
     cursor:pointer;
 }
@@ -130,10 +130,10 @@ button:disabled{
     align-items:center;
     flex-direction:column;
 }
-#overlay img{
+#fullCanvas{
     max-width:90%;
     max-height:90%;
-    object-fit:contain;
+    background:#fff;
 }
 #overlay span{
     color:#fff;
@@ -208,7 +208,7 @@ button:disabled{
 <!-- FULL SCREEN OVERLAY -->
 <div id="overlay">
     <span>Loading preview...</span>
-    <img id="fullImage" src="">
+    <canvas id="fullCanvas"></canvas>
     <button id="closeOverlay" onclick="closeOverlay()">Close</button>
 </div>
 
@@ -314,22 +314,49 @@ function updateMotif(){
     }
 }
 
-// SUBMIT & FULL SCREEN
+// SUBMIT & FULL SCREEN CANVAS
 function submitSelection(){
     const overlay = document.getElementById("overlay");
-    const fullImg = document.getElementById("fullImage");
+    const canvas = document.getElementById("fullCanvas");
+    const ctx = canvas.getContext("2d");
+
     overlay.style.display = "flex";
     overlay.querySelector("span").style.display = "block";
-    
-    fullImg.src = ""; // reset
-    setTimeout(()=>{
-        const modelImg = document.getElementById("model").src;
-        fullImg.src = modelImg; // bisa diganti gabungkan canvas untuk semua layer
-        overlay.querySelector("span").style.display = "none";
-    },500);
+
+    canvas.width = window.innerWidth*0.9;
+    canvas.height = window.innerHeight*0.9;
+
+    const imgWarna = new Image();
+    const imgModel = new Image();
+    const imgMotif = new Image();
+
+    imgWarna.crossOrigin = "anonymous";
+    imgModel.crossOrigin = "anonymous";
+    imgMotif.crossOrigin = "anonymous";
+
+    imgWarna.src = document.getElementById("warna").src;
+    imgModel.src = document.getElementById("model").src;
+    imgMotif.src = document.getElementById("motif").src;
+
+    let loaded = 0;
+    [imgWarna,imgModel,imgMotif].forEach(img=>{
+        img.onload = ()=>{
+            loaded++;
+            if(loaded === 3){
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height);
+                ctx.drawImage(imgModel,0,0,canvas.width,canvas.height);
+                ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height);
+
+                overlay.querySelector("span").style.display = "none";
+                canvas.style.display = "block";
+            }
+        };
+    });
 }
 function closeOverlay(){
     document.getElementById("overlay").style.display = "none";
+    document.getElementById("fullCanvas").style.display = "none";
 }
 
 // INIT
