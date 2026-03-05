@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Selempang Wisuda</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header>
+Custom Selempang Wisuda
+</header>
+
+<div class="container">
+
+<!-- PANEL PILIHAN -->
+<div class="controls">
+
+<h3>Pilih Model</h3>
+
+<div class="grid">
+
+<img src="images/model/model1.png" onclick="setModel('model1.png')">
+<img src="images/model/model2.png" onclick="setModel('model2.png')">
+<img src="images/model/model3.png" onclick="setModel('model3.png')">
+
+</div>
+
+<h3>Pilih Motif</h3>
+
+<div class="grid">
+
+<img src="images/motif/motif1.png" onclick="setMotif('motif1.png')">
+<img src="images/motif/motif2.png" onclick="setMotif('motif2.png')">
+<img src="images/motif/motif3.png" onclick="setMotif('motif3.png')">
+
+</div>
+
+<h3>Warna Bahan</h3>
+
+<div class="colors">
+
+<div class="color hitam" onclick="setColor('#000')"></div>
+<div class="color maroon" onclick="setColor('#7a0019')"></div>
+<div class="color navy" onclick="setColor('#001f3f')"></div>
+
+</div>
+
+<h3>Nama Bordir</h3>
+
+<input type="text" id="nama" placeholder="Tulis nama">
+
+</div>
+
+<!-- PREVIEW -->
+<div class="preview">
+
+<div class="mockup">
+
+<img id="modelLayer" src="images/model/model1.png">
+
+<img id="motifLayer" src="images/motif/motif1.png">
+
+<div id="colorLayer"></div>
+
+<div id="textLayer">Nama</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
