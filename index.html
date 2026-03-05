@@ -1,82 +1,208 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Custom Selempang Wisuda</title>
 
-<link rel="stylesheet" href="style.css">
+<style>
 
+body{
+font-family:Arial;
+background:#f4f4f4;
+margin:0;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:20px;
+display:flex;
+gap:30px;
+flex-wrap:wrap;
+}
+
+.preview{
+flex:1;
+min-width:350px;
+position:relative;
+}
+
+.preview img{
+width:100%;
+}
+
+.sash{
+position:absolute;
+top:0;
+left:0;
+}
+
+.nama{
+position:absolute;
+top:160px;
+right:90px;
+color:white;
+font-size:26px;
+font-weight:bold;
+transform:rotate(90deg);
+}
+
+.controls{
+flex:1;
+min-width:300px;
+}
+
+.group{
+margin-bottom:25px;
+}
+
+.group h3{
+margin-bottom:10px;
+}
+
+.options{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.options img{
+width:60px;
+height:60px;
+border-radius:6px;
+cursor:pointer;
+border:3px solid transparent;
+}
+
+.options img.active{
+border:3px solid #007bff;
+}
+
+.color{
+width:35px;
+height:35px;
+border-radius:50%;
+cursor:pointer;
+border:3px solid transparent;
+}
+
+.color.active{
+border:3px solid black;
+}
+
+input{
+padding:10px;
+width:100%;
+font-size:16px;
+}
+
+button{
+padding:12px;
+background:#007bff;
+border:none;
+color:white;
+width:100%;
+margin-top:10px;
+cursor:pointer;
+}
+
+</style>
 </head>
 
 <body>
 
-<header>
-Custom Selempang Wisuda
-</header>
-
 <div class="container">
-
-<!-- PANEL PILIHAN -->
-<div class="controls">
-
-<h3>Pilih Model</h3>
-
-<div class="grid">
-
-<img src="images/model/model1.png" onclick="setModel('model1.png')">
-<img src="images/model/model2.png" onclick="setModel('model2.png')">
-<img src="images/model/model3.png" onclick="setModel('model3.png')">
-
-</div>
-
-<h3>Pilih Motif</h3>
-
-<div class="grid">
-
-<img src="images/motif/motif1.png" onclick="setMotif('motif1.png')">
-<img src="images/motif/motif2.png" onclick="setMotif('motif2.png')">
-<img src="images/motif/motif3.png" onclick="setMotif('motif3.png')">
-
-</div>
-
-<h3>Warna Bahan</h3>
-
-<div class="colors">
-
-<div class="color hitam" onclick="setColor('#000')"></div>
-<div class="color maroon" onclick="setColor('#7a0019')"></div>
-<div class="color navy" onclick="setColor('#001f3f')"></div>
-
-</div>
-
-<h3>Nama Bordir</h3>
-
-<input type="text" id="nama" placeholder="Tulis nama">
-
-</div>
 
 <!-- PREVIEW -->
 <div class="preview">
 
-<div class="mockup">
+<img src="images/manekin.png">
 
-<img id="modelLayer" src="images/model/model1.png">
+<img id="sashLayer" class="sash" src="images/model1.png">
 
-<img id="motifLayer" src="images/motif/motif1.png">
+<div id="namaPreview" class="nama">Nama Anda</div>
 
-<div id="colorLayer"></div>
+</div>
 
-<div id="textLayer">Nama</div>
+
+<!-- CONTROL -->
+<div class="controls">
+
+<div class="group">
+<h3>Pilih Model</h3>
+
+<div class="options">
+
+<img src="images/model1_thumb.png" onclick="selectModel('model1.png',this)">
+<img src="images/model2_thumb.png" onclick="selectModel('model2.png',this)">
+<img src="images/model3_thumb.png" onclick="selectModel('model3.png',this)">
+<img src="images/model4_thumb.png" onclick="selectModel('model4.png',this)">
+
+</div>
+</div>
+
+
+<div class="group">
+<h3>Pilih Warna Bahan</h3>
+
+<div class="options">
+
+<div class="color" style="background:#800000" onclick="changeColor('maroon.png',this)"></div>
+<div class="color" style="background:#001f3f" onclick="changeColor('navy.png',this)"></div>
+<div class="color" style="background:black" onclick="changeColor('black.png',this)"></div>
+
+</div>
+</div>
+
+
+<div class="group">
+<h3>Nama di Selempang</h3>
+
+<input type="text" id="namaInput" placeholder="Tulis nama anda" onkeyup="updateNama()">
+
+</div>
+
+<button>Pesan Sekarang</button>
 
 </div>
 
 </div>
 
-</div>
 
-<script src="script.js"></script>
+<script>
+
+function updateNama(){
+
+let nama=document.getElementById("namaInput").value;
+
+document.getElementById("namaPreview").innerText=nama;
+
+}
+
+
+function selectModel(img,el){
+
+document.getElementById("sashLayer").src="images/"+img;
+
+document.querySelectorAll(".options img").forEach(i=>i.classList.remove("active"))
+
+el.classList.add("active")
+
+}
+
+
+function changeColor(img,el){
+
+document.getElementById("sashLayer").src="images/"+img;
+
+document.querySelectorAll(".color").forEach(c=>c.classList.remove("active"))
+
+el.classList.add("active")
+
+}
+
+</script>
 
 </body>
 </html>
