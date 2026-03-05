@@ -70,7 +70,7 @@ button:disabled{
     cursor:not-allowed;
 }
 
-/* MOTIF GRID - horizontal */
+/* THUMBNAIL GRID */
 .grid{
     display:flex;
     flex-wrap:wrap;
@@ -187,7 +187,7 @@ button:disabled{
         <!-- MODEL -->
         <div class="group">
             <h3>Pilih Model</h3>
-            <div class="options" id="modelOptions"></div>
+            <div class="grid" id="modelOptions"></div>
         </div>
 
         <!-- MOTIF -->
@@ -212,14 +212,30 @@ button:disabled{
 
 <script>
 // STATE
-let model = 1;
+let model = "";
 let bordir = "";
 let motif = "Motif_Kait";
 let bahanSelected = false;
 let bordirSelected = false;
 
 // DATA
-const models = [1,2,3,4,5,6,7,8,9];
+const modelImages = [
+    "Model_1_Gold.png",
+    "Model_2_Gold.png",
+    "Model_3_Gold.png",
+    "Model_4_Gold.png",
+    "Model_5_Gold.png",
+    "Model_6_Gold.png",
+    "Model_7_Gold.png",
+    "Model_8_Gold.png",
+    "Model_9_Gold.png",
+    "PPG_1_Silver.png",
+    "PPG_2_Silver.png",
+    "PPG_3_Silver.png",
+    "PPG_1_Gold.png",
+    "PPG_2_Gold.png"
+];
+
 const motifs = [
     "Motif_Daun",
     "Motif_Flora",
@@ -230,16 +246,17 @@ const motifs = [
     "Motif_Simpul"
 ];
 
-// LOAD MODEL BUTTONS
+// LOAD MODEL THUMBNAILS
 function loadModels(){
     const container = document.getElementById("modelOptions");
     container.innerHTML = "";
-    models.forEach(m=>{
-        let btn = document.createElement("button");
-        btn.textContent = m;
-        btn.onclick = ()=> setModel(m);
-        btn.disabled = true;
-        container.appendChild(btn);
+    modelImages.forEach(imgName => {
+        const div = document.createElement("div");
+        div.className = "thumb";
+        div.onclick = ()=> setModelImage(imgName);
+        div.innerHTML = `<img loading="lazy" src="images/Model/${imgName}"><span>${imgName.replace(".png","")}</span>`;
+        container.appendChild(div);
+        div.style.pointerEvents = bordirSelected ? "auto" : "none"; // aktifkan kalau bordir sudah dipilih
     });
 }
 
@@ -253,9 +270,8 @@ function loadMotifs(){
         div.className = "thumb";
         div.onclick = ()=> setMotif(m);
         div.innerHTML = `<img loading="lazy" src="images/Thumb/${m}_thumb.png"><span>${name}</span>`;
-        div.querySelector("img").parentElement.querySelector("span").style.userSelect = "none";
         container.appendChild(div);
-        div.style.pointerEvents = "none"; // disable sampai user pilih model
+        div.style.pointerEvents = "none";
     });
 }
 
@@ -280,39 +296,34 @@ function setBordir(b){
 }
 function enableModel(){
     if(bordirSelected){
-        document.querySelectorAll("#modelOptions button").forEach(btn=> btn.disabled = false);
+        document.querySelectorAll("#modelOptions .thumb").forEach(div=> div.style.pointerEvents = "auto");
     }
 }
-function setModel(n){
-    model = n;
-    updateModel();
+function setModelImage(imgName){
+    model = imgName;
+    document.getElementById("model").src = "images/Model/" + imgName;
+    document.querySelectorAll("#modelOptions .thumb").forEach(t=>t.classList.remove("active"));
+    const thumb = document.querySelector(`#modelOptions img[src*='${imgName}']`);
+    if(thumb) thumb.parentElement.classList.add("active");
     enableMotif();
 }
 function enableMotif(){
-    document.querySelectorAll(".thumb").forEach(t=> t.style.pointerEvents = "auto");
+    document.querySelectorAll(".thumb").forEach(t=>t.style.pointerEvents = "auto");
 }
 function setMotif(m){
     if(!bordirSelected) return;
     motif = m;
-    updateMotif();
-    document.querySelectorAll(".thumb").forEach(t=>t.classList.remove("active"));
-    const thumb = document.querySelector(`.thumb img[src*='${m}_thumb.png']`);
-    if(thumb) thumb.parentElement.classList.add("active");
-}
-
-// UPDATE FUNCTIONS
-function updateModel(){
-    document.getElementById("model").src = "images/Model/Model_" + model + "_" + bordir + ".png";
-}
-function updateMotif(){
     if(motif === "Motif_Polos"){
         document.getElementById("motif").src = "images/Motif/Motif_Polos.png";
     } else {
         document.getElementById("motif").src = "images/Motif/" + motif + "_" + bordir + ".png";
     }
+    document.querySelectorAll("#motifList .thumb").forEach(t=>t.classList.remove("active"));
+    const thumb = document.querySelector(`#motifList img[src*='${m}_thumb.png']`);
+    if(thumb) thumb.parentElement.classList.add("active");
 }
 
-// SUBMIT & FULL SCREEN CANVAS PROPORSIONAL
+// SUBMIT FULL SCREEN CANVAS PROPORSIONAL
 function submitSelection(){
     const overlay = document.getElementById("overlay");
     const canvas = document.getElementById("fullCanvas");
@@ -338,7 +349,6 @@ function submitSelection(){
         img.onload = ()=>{
             loaded++;
             if(loaded === 3){
-                // hitung rasio model
                 const screenRatio = window.innerWidth / window.innerHeight;
                 const imgRatio = imgModel.width / imgModel.height;
                 let drawWidth, drawHeight;
@@ -349,15 +359,12 @@ function submitSelection(){
                     drawHeight = window.innerHeight * 0.9;
                     drawWidth = drawHeight * imgRatio;
                 }
-
                 canvas.width = drawWidth;
                 canvas.height = drawHeight;
-
                 ctx.clearRect(0,0,canvas.width,canvas.height);
                 ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height);
                 ctx.drawImage(imgModel,0,0,canvas.width,canvas.height);
                 ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height);
-
                 overlay.querySelector("span").style.display = "none";
                 canvas.style.display = "block";
             }
