@@ -74,7 +74,7 @@ button:hover{background:#bbb;}
         </div>
 
         <!-- SUBMIT -->
-        <button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
+        <button id="submitBtn" onclick="submitSelection()">Submit</button>
     </div>
 </div>
 
@@ -122,23 +122,15 @@ function loadMotifs(){
 }
 
 // SET FUNCTIONS
-function setWarna(w){
-    document.getElementById("warna").src = "images/Bahan/Bahan_" + w + ".png";
-}
-function setBordir(b){
-    bordir = b;
-    updateModel();
-    updateMotif();
-}
+function setWarna(w){ document.getElementById("warna").src = "images/Bahan/Bahan_" + w + ".png"; }
+function setBordir(b){ bordir = b; updateModel(); updateMotif(); }
 function setModel(n){
     model = n;
     let modelFile = n.startsWith("PPG_") ? n + "_" + bordir + ".png" : "Model_" + n + "_" + bordir + ".png";
     document.getElementById("model").src = "images/Model/" + modelFile;
 }
 function updateModel(){ setModel(model); }
-function updateMotif(){
-    setMotif(motif);
-}
+function updateMotif(){ setMotif(motif); }
 function setMotif(m){
     motif = m;
     if(m==="Motif_Polos"){
@@ -151,7 +143,8 @@ function setMotif(m){
     if(thumb) thumb.parentElement.classList.add("active");
 }
 
-// SUBMIT FULL SCREEN HIGH QUALITY
+// FULL SCREEN SUBMIT WITH ZOOM
+let canvasScale = 1;
 function submitSelection(){
     const overlay = document.getElementById("overlay");
     const canvas = document.getElementById("fullCanvas");
@@ -177,6 +170,7 @@ function submitSelection(){
         img.onload = ()=>{
             loaded++;
             if(loaded === 3){
+                canvasScale = 1;
                 const scaleFactor = 2;
                 const imgRatio = imgModel.width / imgModel.height;
                 let drawWidth, drawHeight;
@@ -193,14 +187,30 @@ function submitSelection(){
 
                 ctx.imageSmoothingEnabled = true;
                 ctx.imageSmoothingQuality = "high";
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height);
-                ctx.drawImage(imgModel,0,0,canvas.width,canvas.height);
-                ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height);
+                function drawCanvas(){
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    ctx.save();
+                    ctx.translate(canvas.width/2, canvas.height/2);
+                    ctx.scale(canvasScale, canvasScale);
+                    ctx.translate(-canvas.width/2, -canvas.height/2);
+                    ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height);
+                    ctx.drawImage(imgModel,0,0,canvas.width,canvas.height);
+                    ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height);
+                    ctx.restore();
+                }
 
-                canvas.style.width = (canvas.width/scaleFactor) + "px";
-                canvas.style.height = (canvas.height/scaleFactor) + "px";
+                drawCanvas();
+
+                // Zoom with mouse wheel
+                canvas.onwheel = function(e){
+                    e.preventDefault();
+                    const delta = e.deltaY>0?-0.1:0.1;
+                    canvasScale += delta;
+                    if(canvasScale < 0.1) canvasScale = 0.1;
+                    if(canvasScale > 5) canvasScale = 5;
+                    drawCanvas();
+                };
 
                 overlay.querySelector("span").style.display="none";
                 canvas.style.display="block";
@@ -208,6 +218,7 @@ function submitSelection(){
         };
     });
 }
+
 function closeOverlay(){
     document.getElementById("overlay").style.display="none";
     document.getElementById("fullCanvas").style.display="none";
