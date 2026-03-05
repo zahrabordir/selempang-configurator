@@ -22,21 +22,37 @@ gap:40px;
 flex-wrap:wrap;
 }
 
+/* PREVIEW */
+
 .preview{
 flex:1;
 min-width:350px;
 position:relative;
+aspect-ratio:1/1;
 }
 
 .preview img{
 width:100%;
-}
-
-.layer{
 position:absolute;
 top:0;
 left:0;
 }
+
+/* URUTAN LAYER */
+
+#model{
+z-index:1;
+}
+
+#warna{
+z-index:2;
+}
+
+#motif{
+z-index:3;
+}
+
+/* PANEL */
 
 .controls{
 flex:1;
@@ -65,6 +81,8 @@ button:hover{
 background:#bbb;
 }
 
+/* MOTIF GRID */
+
 .grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -84,7 +102,7 @@ border:2px solid #ddd;
 
 .thumb span{
 display:block;
-margin-top:5px;
+margin-top:6px;
 font-size:13px;
 }
 
@@ -110,9 +128,9 @@ flex:1;
 
 <img id="model" src="images/Model/Model_1_Gold.png">
 
-<img id="warna" class="layer" src="images/Bahan/Bahan_Navy.png">
+<img id="warna" src="images/Bahan/Bahan_Navy.png">
 
-<img id="motif" class="layer" src="images/Motif/Motif_Kait_Gold.png">
+<img id="motif" src="images/Motif/Motif_Kait_Gold.png">
 
 </div>
 
@@ -188,11 +206,11 @@ flex:1;
 
 <script>
 
-let model=1
-let bordir="Gold"
-let motif="Motif_Kait"
+let model = 1
+let bordir = "Gold"
+let motif = "Motif_Kait"
 
-const motifs=[
+const motifs = [
 "Motif_Daun",
 "Motif_Flora",
 "Motif_Kait",
@@ -202,23 +220,24 @@ const motifs=[
 "Motif_Simpul"
 ]
 
+
 function setModel(n){
 
-model=n
+model = n
 updateModel()
 
 }
 
 function setWarna(w){
 
-document.getElementById("warna").src=
-"images/Bahan/Bahan_"+w+".png"
+document.getElementById("warna").src =
+"images/Bahan/Bahan_" + w + ".png"
 
 }
 
 function setBordir(b){
 
-bordir=b
+bordir = b
 
 updateModel()
 updateMotif()
@@ -227,7 +246,7 @@ updateMotif()
 
 function setMotif(m){
 
-motif=m
+motif = m
 
 updateMotif()
 
@@ -235,36 +254,39 @@ updateMotif()
 
 function updateModel(){
 
-document.getElementById("model").src=
-"images/Model/Model_"+model+"_"+bordir+".png"
+document.getElementById("model").src =
+"images/Model/Model_" + model + "_" + bordir + ".png"
 
 }
 
 function updateMotif(){
 
-if(motif=="Motif_Polos"){
+if(motif === "Motif_Polos"){
 
-document.getElementById("motif").src=
+document.getElementById("motif").src =
 "images/Motif/Motif_Polos.png"
 
 }else{
 
-document.getElementById("motif").src=
-"images/Motif/"+motif+"_"+bordir+".png"
+document.getElementById("motif").src =
+"images/Motif/" + motif + "_" + bordir + ".png"
 
 }
 
 }
+
+
+/* LOAD THUMBNAIL */
 
 function loadMotif(){
 
-let container=document.getElementById("motifList")
+let container = document.getElementById("motifList")
 
-motifs.forEach(m=>{
+motifs.forEach(m => {
 
-let name=m.replace("Motif_","")
+let name = m.replace("Motif_","")
 
-container.innerHTML+=`
+container.innerHTML += `
 
 <div class="thumb" onclick="setMotif('${m}')">
 
