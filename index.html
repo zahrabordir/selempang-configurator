@@ -19,7 +19,6 @@ body{
     flex-wrap:wrap;
     gap:40px;
 }
-/* PREVIEW */
 .preview{
     flex:1;
     min-width:300px;
@@ -36,8 +35,7 @@ body{
     height:100%;
     object-fit:contain;
 }
-/* LAYER Z-INDEX UPDATE (Bahan paling bawah) */
-#warna{ z-index:1; }  /* layer paling bawah */
+#warna{ z-index:1; }
 #model{ z-index:2; }
 #motif{ z-index:3; }
 
@@ -68,8 +66,12 @@ button{
 button:hover{
     background:#bbb;
 }
+button:disabled{
+    background:#f0f0f0;
+    cursor:not-allowed;
+}
 
-/* MOTIF GRID - thumbnail kecil + teks di samping */
+/* MOTIF GRID */
 .grid{
     display:flex;
     flex-direction:column;
@@ -96,8 +98,6 @@ button:hover{
 .thumb.active img{
     border-color:#444;
 }
-
-/* TAB */
 .tab{
     display:flex;
     gap:10px;
@@ -128,19 +128,13 @@ button:hover{
     <!-- CONTROLS -->
     <div class="controls">
 
-        <!-- MODEL -->
+        <!-- BAHAN -->
         <div class="group">
-            <h3>Pilih Model</h3>
-            <div class="options" id="modelOptions"></div>
-        </div>
-
-        <!-- WARNA BAHAN -->
-        <div class="group">
-            <h3>Warna Bahan</h3>
+            <h3>Pilih Bahan</h3>
             <div class="options">
-                <button onclick="setWarna('Hitam')">Hitam</button>
-                <button onclick="setWarna('Maroon')">Maroon</button>
-                <button onclick="setWarna('Navy')">Navy</button>
+                <button id="btnHitam" onclick="setWarna('Hitam')">Hitam</button>
+                <button id="btnMaroon" onclick="setWarna('Maroon')">Maroon</button>
+                <button id="btnNavy" onclick="setWarna('Navy')">Navy</button>
             </div>
         </div>
 
@@ -148,9 +142,15 @@ button:hover{
         <div class="group">
             <h3>Warna Bordir</h3>
             <div class="tab">
-                <button onclick="setBordir('Gold')">Gold</button>
-                <button onclick="setBordir('Silver')">Silver</button>
+                <button id="btnGold" onclick="setBordir('Gold')" disabled>Gold</button>
+                <button id="btnSilver" onclick="setBordir('Silver')" disabled>Silver</button>
             </div>
+        </div>
+
+        <!-- MODEL -->
+        <div class="group">
+            <h3>Pilih Model</h3>
+            <div class="options" id="modelOptions"></div>
         </div>
 
         <!-- MOTIF -->
@@ -166,8 +166,10 @@ button:hover{
 <script>
 // STATE
 let model = 1;
-let bordir = "Gold";
+let bordir = "";
 let motif = "Motif_Kait";
+let bahanSelected = false;
+let bordirSelected = false;
 
 // DATA
 const models = [1,2,3,4,5,6,7,8,9];
@@ -184,10 +186,12 @@ const motifs = [
 // LOAD MODEL BUTTONS
 function loadModels(){
     const container = document.getElementById("modelOptions");
+    container.innerHTML = "";
     models.forEach(m=>{
         let btn = document.createElement("button");
         btn.textContent = m;
         btn.onclick = ()=> setModel(m);
+        btn.disabled = true; // disable sampai bordir dipilih
         container.appendChild(btn);
     });
 }
@@ -195,33 +199,60 @@ function loadModels(){
 // LOAD MOTIF THUMBNAIL
 function loadMotifs(){
     const container = document.getElementById("motifList");
+    container.innerHTML = "";
     motifs.forEach(m=>{
         let name = m.replace("Motif_","");
         const div = document.createElement("div");
         div.className = "thumb";
         div.onclick = ()=> setMotif(m);
         div.innerHTML = `<img loading="lazy" src="images/Thumb/${m}_thumb.png"><span>${name}</span>`;
+        div.querySelector("img").parentElement.querySelector("span").style.userSelect = "none";
         container.appendChild(div);
     });
 }
 
 // SET FUNCTIONS
+function setWarna(w){
+    document.getElementById("warna").src = "images/Bahan/Bahan_" + w + ".png";
+    bahanSelected = true;
+    enableBordir();
+}
+
+function enableBordir(){
+    if(bahanSelected){
+        document.getElementById("btnGold").disabled = false;
+        document.getElementById("btnSilver").disabled = false;
+    }
+}
+
+function setBordir(b){
+    bordir = b;
+    bordirSelected = true;
+    updateModel();
+    updateMotif();
+    enableModel();
+}
+
+function enableModel(){
+    if(bordirSelected){
+        document.querySelectorAll("#modelOptions button").forEach(btn=> btn.disabled = false);
+    }
+}
+
 function setModel(n){
     model = n;
     updateModel();
+    enableMotif();
 }
-function setWarna(w){
-    document.getElementById("warna").src = "images/Bahan/Bahan_" + w + ".png";
+
+function enableMotif(){
+    document.querySelectorAll(".thumb").forEach(t=> t.style.pointerEvents = "auto");
 }
-function setBordir(b){
-    bordir = b;
-    updateModel();
-    updateMotif();
-}
+
 function setMotif(m){
+    if(!bordirSelected) return; // pastikan sudah pilih bordir
     motif = m;
     updateMotif();
-    // highlight active thumbnail
     document.querySelectorAll(".thumb").forEach(t=>t.classList.remove("active"));
     const thumb = document.querySelector(`.thumb img[src*='${m}_thumb.png']`);
     if(thumb) thumb.parentElement.classList.add("active");
@@ -242,10 +273,11 @@ function updateMotif(){
 // INIT
 loadModels();
 loadMotifs();
-setModel(1);
+// disable semua motif sampai user pilih model
+document.querySelectorAll(".thumb").forEach(t=> t.style.pointerEvents = "none");
+
+// set default warna bahan
 setWarna("Navy");
-setBordir("Gold");
-setMotif("Motif_Kait");
 </script>
 
 </body>
