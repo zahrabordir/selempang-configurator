@@ -88,72 +88,68 @@ background:#bbb;
 
 <!-- MODEL -->
 <div class="group">
-
 <h3>Pilih Model</h3>
 
 <div class="options">
 
-<button onclick="model(1)">1</button>
-<button onclick="model(2)">2</button>
-<button onclick="model(3)">3</button>
-<button onclick="model(4)">4</button>
-<button onclick="model(5)">5</button>
-<button onclick="model(6)">6</button>
-<button onclick="model(7)">7</button>
-<button onclick="model(8)">8</button>
-<button onclick="model(9)">9</button>
+<button onclick="pilihModel(1)">1</button>
+<button onclick="pilihModel(2)">2</button>
+<button onclick="pilihModel(3)">3</button>
+<button onclick="pilihModel(4)">4</button>
+<button onclick="pilihModel(5)">5</button>
+<button onclick="pilihModel(6)">6</button>
+<button onclick="pilihModel(7)">7</button>
+<button onclick="pilihModel(8)">8</button>
+<button onclick="pilihModel(9)">9</button>
 
 </div>
-
 </div>
 
 
-<!-- WARNA -->
+<!-- WARNA BAHAN -->
 <div class="group">
-
 <h3>Warna Bahan</h3>
 
 <div class="options">
 
-<button onclick="warna('Hitam')">Hitam</button>
-<button onclick="warna('Maroon')">Maroon</button>
-<button onclick="warna('Navy')">Navy</button>
+<button onclick="pilihBahan('Hitam')">Hitam</button>
+<button onclick="pilihBahan('Maroon')">Maroon</button>
+<button onclick="pilihBahan('Navy')">Navy</button>
 
 </div>
-
 </div>
 
 
 <!-- MOTIF -->
 <div class="group">
-
 <h3>Pilih Motif</h3>
 
 <div class="options">
 
-<button onclick="motif('Motif_Daun_Gold.png')">Daun Gold</button>
-<button onclick="motif('Motif_Daun_Silver.png')">Daun Silver</button>
-
-<button onclick="motif('Motif_Flora_Gold.png')">Flora Gold</button>
-<button onclick="motif('Motif_Flora_Silver.png')">Flora Silver</button>
-
-<button onclick="motif('Motif_Kait_Gold.png')">Kait Gold</button>
-<button onclick="motif('Motif_Kait_Silver.png')">Kait Silver</button>
-
-<button onclick="motif('Motif_Klasik_Gold.png')">Klasik Gold</button>
-<button onclick="motif('Motif_Klasik_Silver.png')">Klasik Silver</button>
-
-<button onclick="motif('Motif_Serat_Gold.png')">Serat Gold</button>
-<button onclick="motif('Motif_Serat_Silver.png')">Serat Silver</button>
-
-<button onclick="motif('Motif_Simpul_Gold.png')">Simpul Gold</button>
-<button onclick="motif('Motif_Simpul_Silver.png')">Simpul Silver</button>
-
-<button onclick="motif('Motif_Polos.png')">Polos</button>
+<button onclick="pilihMotif('Daun')">Daun</button>
+<button onclick="pilihMotif('Flora')">Flora</button>
+<button onclick="pilihMotif('Kait')">Kait</button>
+<button onclick="pilihMotif('Klasik')">Klasik</button>
+<button onclick="pilihMotif('Serat')">Serat</button>
+<button onclick="pilihMotif('Simpul')">Simpul</button>
+<button onclick="pilihMotif('Polos')">Polos</button>
 
 </div>
+</div>
+
+
+<!-- WARNA BORDIR -->
+<div class="group">
+<h3>Warna Bordir</h3>
+
+<div class="options">
+
+<button onclick="pilihWarna('Gold')">Gold</button>
+<button onclick="pilihWarna('Silver')">Silver</button>
 
 </div>
+</div>
+
 
 </div>
 
@@ -163,47 +159,48 @@ background:#bbb;
 <script>
 
 let modelNow = 1
-let warnaNow = "Navy"
-let warnaTulisan = "Gold"
+let bahanNow = "Navy"
+let motifNow = "Polos"
+let bordirNow = "Gold"
 
 
-function model(n){
+function pilihModel(n){
 
 modelNow = n
-updateModel()
+updatePreview()
 
 }
 
-function warna(w){
+function pilihBahan(nama){
 
-warnaNow = w
+bahanNow = nama
 
 document.getElementById("warna").src =
-"images/Bahan_" + w + ".png"
-
-updateModel()
+"images/Bahan_" + nama + ".png"
 
 }
 
-function motif(file){
+function pilihMotif(nama){
 
-document.getElementById("motif").src =
-"images/" + file
-
-if(file.includes("Silver")){
-warnaTulisan = "Silver"
-}else{
-warnaTulisan = "Gold"
-}
-
-updateModel()
+motifNow = nama
+updatePreview()
 
 }
 
-function updateModel(){
+function pilihWarna(nama){
+
+bordirNow = nama
+updatePreview()
+
+}
+
+function updatePreview(){
 
 document.getElementById("model").src =
-"images/Model_" + modelNow + "_" + warnaTulisan + ".png"
+"images/Model_" + modelNow + "_" + bordirNow + ".png"
+
+document.getElementById("motif").src =
+"images/Motif_" + motifNow + "_" + bordirNow + ".png"
 
 }
 
