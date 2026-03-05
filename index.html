@@ -170,7 +170,6 @@ let warnaTulisan = "Gold"
 function model(n){
 
 modelNow = n
-
 updateModel()
 
 }
@@ -182,6 +181,8 @@ warnaNow = w
 document.getElementById("warna").src =
 "images/Bahan_" + w + ".png"
 
+updateModel()
+
 }
 
 function motif(file){
@@ -190,13 +191,9 @@ document.getElementById("motif").src =
 "images/" + file
 
 if(file.includes("Silver")){
-
 warnaTulisan = "Silver"
-
 }else{
-
 warnaTulisan = "Gold"
-
 }
 
 updateModel()
