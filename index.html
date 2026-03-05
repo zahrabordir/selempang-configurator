@@ -39,7 +39,6 @@ body{
 #model{ z-index:2; }
 #motif{ z-index:3; }
 
-/* CONTROLS */
 .controls{
     flex:1;
     min-width:280px;
@@ -71,7 +70,6 @@ button:disabled{
     cursor:not-allowed;
 }
 
-/* MOTIF GRID */
 .grid{
     display:flex;
     flex-direction:column;
@@ -106,6 +104,46 @@ button:disabled{
 .tab button{
     flex:1;
 }
+#submitBtn{
+    margin-top:20px;
+    background:#4CAF50;
+    color:#fff;
+}
+#submitBtn:hover{
+    background:#45a049;
+}
+
+/* FULL SCREEN OVERLAY */
+#overlay{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    background:rgba(0,0,0,0.9);
+    z-index:9999;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+#overlay img{
+    max-width:90%;
+    max-height:90%;
+    object-fit:contain;
+}
+#overlay span{
+    color:#fff;
+    margin-bottom:10px;
+}
+#closeOverlay{
+    margin-top:20px;
+    padding:8px 14px;
+    cursor:pointer;
+    border:none;
+    border-radius:5px;
+    background:#fff;
+}
 @media(max-width:768px){
     .container{
         flex-direction:column;
@@ -118,14 +156,12 @@ button:disabled{
 
 <div class="container">
 
-    <!-- PREVIEW -->
     <div class="preview">
         <img id="warna" src="">
         <img id="model" src="">
         <img id="motif" src="">
     </div>
 
-    <!-- CONTROLS -->
     <div class="controls">
 
         <!-- BAHAN -->
@@ -159,8 +195,18 @@ button:disabled{
             <div class="grid" id="motifList"></div>
         </div>
 
+        <!-- SUBMIT -->
+        <button id="submitBtn" onclick="submitSelection()">Submit</button>
+
     </div>
 
+</div>
+
+<!-- FULL SCREEN OVERLAY -->
+<div id="overlay">
+    <span>Loading preview...</span>
+    <img id="fullImage" src="">
+    <button id="closeOverlay" onclick="closeOverlay()">Close</button>
 </div>
 
 <script>
@@ -191,7 +237,7 @@ function loadModels(){
         let btn = document.createElement("button");
         btn.textContent = m;
         btn.onclick = ()=> setModel(m);
-        btn.disabled = true; // disable sampai bordir dipilih
+        btn.disabled = true;
         container.appendChild(btn);
     });
 }
@@ -208,6 +254,7 @@ function loadMotifs(){
         div.innerHTML = `<img loading="lazy" src="images/Thumb/${m}_thumb.png"><span>${name}</span>`;
         div.querySelector("img").parentElement.querySelector("span").style.userSelect = "none";
         container.appendChild(div);
+        div.style.pointerEvents = "none"; // disable sampai user pilih model
     });
 }
 
@@ -217,14 +264,12 @@ function setWarna(w){
     bahanSelected = true;
     enableBordir();
 }
-
 function enableBordir(){
     if(bahanSelected){
         document.getElementById("btnGold").disabled = false;
         document.getElementById("btnSilver").disabled = false;
     }
 }
-
 function setBordir(b){
     bordir = b;
     bordirSelected = true;
@@ -232,25 +277,21 @@ function setBordir(b){
     updateMotif();
     enableModel();
 }
-
 function enableModel(){
     if(bordirSelected){
         document.querySelectorAll("#modelOptions button").forEach(btn=> btn.disabled = false);
     }
 }
-
 function setModel(n){
     model = n;
     updateModel();
     enableMotif();
 }
-
 function enableMotif(){
     document.querySelectorAll(".thumb").forEach(t=> t.style.pointerEvents = "auto");
 }
-
 function setMotif(m){
-    if(!bordirSelected) return; // pastikan sudah pilih bordir
+    if(!bordirSelected) return;
     motif = m;
     updateMotif();
     document.querySelectorAll(".thumb").forEach(t=>t.classList.remove("active"));
@@ -270,13 +311,35 @@ function updateMotif(){
     }
 }
 
+// SUBMIT & FULL SCREEN
+function submitSelection(){
+    const overlay = document.getElementById("overlay");
+    const fullImg = document.getElementById("fullImage");
+    overlay.style.display = "flex";
+    overlay.querySelector("span").style.display = "block";
+    
+    // gabungkan layer preview menjadi satu gambar
+    // di sini kita hanya menampilkan model+warna+motif overlay full screen
+    fullImg.src = ""; // reset
+    setTimeout(()=>{
+        const preview = document.querySelector(".preview");
+        // copy src dari masing-masing layer
+        const warna = document.getElementById("warna").src;
+        const modelImg = document.getElementById("model").src;
+        const motifImg = document.getElementById("motif").src;
+        // tampilkan full screen dengan model, motif, warna overlay
+        // untuk demo, kita tampilkan model + motif (warna tetap dibawah)
+        fullImg.src = modelImg; // bisa diganti gabungkan canvas untuk semua layer
+        overlay.querySelector("span").style.display = "none";
+    },500); // simulasi loading
+}
+function closeOverlay(){
+    document.getElementById("overlay").style.display = "none";
+}
+
 // INIT
 loadModels();
 loadMotifs();
-// disable semua motif sampai user pilih model
-document.querySelectorAll(".thumb").forEach(t=> t.style.pointerEvents = "none");
-
-// set default warna bahan
 setWarna("Navy");
 </script>
 
