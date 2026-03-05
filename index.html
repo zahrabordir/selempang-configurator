@@ -2,102 +2,100 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Preview Selempang Wisuda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Selempang Wisuda</title>
 
 <style>
 
 body{
 font-family:Arial;
+background:#f2f2f2;
 margin:0;
-background:#f5f5f5;
 }
 
 .container{
-max-width:1100px;
+max-width:1200px;
 margin:auto;
-padding:20px;
-background:white;
+padding:30px;
 display:flex;
-gap:30px;
+gap:40px;
 flex-wrap:wrap;
 }
 
-.left{
-flex:1;
-min-width:320px;
-}
-
-.right{
-flex:1;
-min-width:320px;
-text-align:center;
-}
-
 .preview{
-width:100%;
-max-width:400px;
+flex:1;
+min-width:350px;
+position:relative;
 }
 
 .preview img{
 width:100%;
 }
 
-.section{
-margin-bottom:25px;
+.layer{
+position:absolute;
+top:0;
+left:0;
 }
 
-.section h3{
-margin-bottom:10px;
+.controls{
+flex:1;
+min-width:320px;
+}
+
+.group{
+margin-bottom:30px;
+}
+
+.options{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+button{
+padding:10px 14px;
+border:none;
+background:#ddd;
+cursor:pointer;
+border-radius:5px;
+}
+
+button:hover{
+background:#bbb;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
-gap:10px;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
 }
 
 .thumb{
-cursor:pointer;
 text-align:center;
-border:2px solid transparent;
-border-radius:8px;
-padding:5px;
-background:#fafafa;
+cursor:pointer;
 }
 
 .thumb img{
 width:100%;
 border-radius:6px;
+border:2px solid #ddd;
 }
 
 .thumb span{
 display:block;
-font-size:12px;
-margin-top:4px;
+margin-top:5px;
+font-size:13px;
 }
 
-.thumb.active{
-border-color:#d4af37;
-background:#fff8dc;
-}
-
-.tabs{
+.tab{
 display:flex;
 gap:10px;
 margin-bottom:15px;
 }
 
-.tab{
-padding:8px 16px;
-background:#eee;
-cursor:pointer;
-border-radius:6px;
-}
-
-.tab.active{
-background:#d4af37;
-color:white;
+.tab button{
+flex:1;
 }
 
 </style>
@@ -107,83 +105,80 @@ color:white;
 
 <div class="container">
 
-<!-- LEFT -->
-<div class="left">
+<!-- PREVIEW -->
+<div class="preview">
 
-<div class="section">
-<h3>Pilih Model</h3>
+<img id="model" src="images/Model/Model_1_Gold.png">
 
-<select id="modelSelect">
+<img id="warna" class="layer" src="images/Bahan/Bahan_Navy.png">
 
-<option value="model_1">Model 1</option>
-<option value="model_2">Model 2</option>
-<option value="model_3">Model 3</option>
-
-</select>
+<img id="motif" class="layer" src="images/Motif/Motif_Kait_Gold.png">
 
 </div>
 
 
-<div class="section">
+<div class="controls">
+
+<!-- MODEL -->
+<div class="group">
+
+<h3>Pilih Model</h3>
+
+<div class="options">
+
+<button onclick="setModel(1)">1</button>
+<button onclick="setModel(2)">2</button>
+<button onclick="setModel(3)">3</button>
+<button onclick="setModel(4)">4</button>
+<button onclick="setModel(5)">5</button>
+<button onclick="setModel(6)">6</button>
+<button onclick="setModel(7)">7</button>
+<button onclick="setModel(8)">8</button>
+<button onclick="setModel(9)">9</button>
+
+</div>
+
+</div>
+
+
+<!-- WARNA BAHAN -->
+<div class="group">
+
+<h3>Warna Bahan</h3>
+
+<div class="options">
+
+<button onclick="setWarna('Hitam')">Hitam</button>
+<button onclick="setWarna('Maroon')">Maroon</button>
+<button onclick="setWarna('Navy')">Navy</button>
+
+</div>
+
+</div>
+
+
+<!-- WARNA BORDIR -->
+<div class="group">
+
+<h3>Warna Bordir</h3>
+
+<div class="tab">
+
+<button onclick="setBordir('Gold')">Gold</button>
+<button onclick="setBordir('Silver')">Silver</button>
+
+</div>
+
+</div>
+
+
+<!-- MOTIF -->
+<div class="group">
 
 <h3>Pilih Motif</h3>
 
-<div class="tabs">
-<div class="tab active" onclick="switchTab('gold')">Gold</div>
-<div class="tab" onclick="switchTab('silver')">Silver</div>
-</div>
+<div class="grid" id="motifList"></div>
 
-<div id="gold" class="grid motifGrid">
-
-<div class="thumb" data-motif="Motif_Kait">
-<img src="images/motif/Motif_Kait_thumb.png">
-<span>Kait</span>
-</div>
-
-<div class="thumb" data-motif="Motif_Bunga">
-<img src="images/motif/Motif_Bunga_thumb.png">
-<span>Bunga</span>
-</div>
-
-<div class="thumb" data-motif="Motif_Mahkota">
-<img src="images/motif/Motif_Mahkota_thumb.png">
-<span>Mahkota</span>
-</div>
-
-</div>
-
-
-<div id="silver" class="grid motifGrid" style="display:none">
-
-<div class="thumb" data-motif="Motif_Kait">
-<img src="images/motif/Motif_Kait_thumb.png">
-<span>Kait</span>
-</div>
-
-<div class="thumb" data-motif="Motif_Bunga">
-<img src="images/motif/Motif_Bunga_thumb.png">
-<span>Bunga</span>
-</div>
-
-<div class="thumb" data-motif="Motif_Mahkota">
-<img src="images/motif/Motif_Mahkota_thumb.png">
-<span>Mahkota</span>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- RIGHT -->
-<div class="right">
-
-<h3>Preview</h3>
-
-<div class="preview">
-<img id="previewImage" src="images/model/model_1.png">
 </div>
 
 </div>
@@ -193,59 +188,99 @@ color:white;
 
 <script>
 
-let selectedMotif="Motif_Kait"
-let selectedModel="model_1"
+let model=1
+let bordir="Gold"
+let motif="Motif_Kait"
 
+const motifs=[
+"Motif_Daun",
+"Motif_Flora",
+"Motif_Kait",
+"Motif_Klasik",
+"Motif_Polos",
+"Motif_Serat",
+"Motif_Simpul"
+]
 
-document.querySelectorAll(".thumb").forEach(el=>{
+function setModel(n){
 
-el.onclick=function(){
-
-document.querySelectorAll(".thumb").forEach(t=>t.classList.remove("active"))
-
-this.classList.add("active")
-
-selectedMotif=this.dataset.motif
-
-updatePreview()
+model=n
+updateModel()
 
 }
+
+function setWarna(w){
+
+document.getElementById("warna").src=
+"images/Bahan/Bahan_"+w+".png"
+
+}
+
+function setBordir(b){
+
+bordir=b
+
+updateModel()
+updateMotif()
+
+}
+
+function setMotif(m){
+
+motif=m
+
+updateMotif()
+
+}
+
+function updateModel(){
+
+document.getElementById("model").src=
+"images/Model/Model_"+model+"_"+bordir+".png"
+
+}
+
+function updateMotif(){
+
+if(motif=="Motif_Polos"){
+
+document.getElementById("motif").src=
+"images/Motif/Motif_Polos.png"
+
+}else{
+
+document.getElementById("motif").src=
+"images/Motif/"+motif+"_"+bordir+".png"
+
+}
+
+}
+
+function loadMotif(){
+
+let container=document.getElementById("motifList")
+
+motifs.forEach(m=>{
+
+let name=m.replace("Motif_","")
+
+container.innerHTML+=`
+
+<div class="thumb" onclick="setMotif('${m}')">
+
+<img src="images/Thumb/${m}_thumb.png">
+
+<span>${name}</span>
+
+</div>
+
+`
 
 })
 
-
-document.getElementById("modelSelect").onchange=function(){
-
-selectedModel=this.value
-
-updatePreview()
-
 }
 
-
-
-function updatePreview(){
-
-let img="images/model/"+selectedModel+".png"
-
-document.getElementById("previewImage").src=img
-
-}
-
-
-
-function switchTab(tab){
-
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
-
-event.target.classList.add("active")
-
-document.getElementById("gold").style.display="none"
-document.getElementById("silver").style.display="none"
-
-document.getElementById(tab).style.display="grid"
-
-}
+loadMotif()
 
 </script>
 
