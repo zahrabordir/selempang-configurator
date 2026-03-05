@@ -70,32 +70,35 @@ button:disabled{
     cursor:not-allowed;
 }
 
+/* MOTIF GRID - horizontal */
 .grid{
     display:flex;
-    flex-direction:column;
+    flex-wrap:wrap; /* pindah baris jika tidak muat */
     gap:10px;
 }
 .thumb{
     display:flex;
+    flex-direction:column; /* gambar di atas, nama di bawah */
     align-items:center;
-    gap:10px;
     cursor:pointer;
 }
 .thumb img{
-    width:50px;
-    height:50px;
+    width:60px;
+    height:60px;
     border-radius:6px;
     border:2px solid #ddd;
     object-fit:cover;
     transition:0.2s;
 }
 .thumb span{
-    font-size:14px;
-    white-space:nowrap;
+    font-size:13px;
+    margin-top:4px;
+    text-align:center;
 }
 .thumb.active img{
     border-color:#444;
 }
+
 .tab{
     display:flex;
     gap:10px;
@@ -318,20 +321,12 @@ function submitSelection(){
     overlay.style.display = "flex";
     overlay.querySelector("span").style.display = "block";
     
-    // gabungkan layer preview menjadi satu gambar
-    // di sini kita hanya menampilkan model+warna+motif overlay full screen
     fullImg.src = ""; // reset
     setTimeout(()=>{
-        const preview = document.querySelector(".preview");
-        // copy src dari masing-masing layer
-        const warna = document.getElementById("warna").src;
         const modelImg = document.getElementById("model").src;
-        const motifImg = document.getElementById("motif").src;
-        // tampilkan full screen dengan model, motif, warna overlay
-        // untuk demo, kita tampilkan model + motif (warna tetap dibawah)
         fullImg.src = modelImg; // bisa diganti gabungkan canvas untuk semua layer
         overlay.querySelector("span").style.display = "none";
-    },500); // simulasi loading
+    },500);
 }
 function closeOverlay(){
     document.getElementById("overlay").style.display = "none";
