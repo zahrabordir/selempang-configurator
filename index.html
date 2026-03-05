@@ -16,7 +16,6 @@ body{font-family:Arial,sans-serif;background:#f2f2f2;margin:0;padding:0;}
 .options{display:flex;flex-wrap:wrap;gap:10px;}
 button{padding:8px 12px;border:none;background:#ddd;cursor:pointer;border-radius:5px;transition:0.2s;}
 button:hover{background:#bbb;}
-button:disabled{background:#f0f0f0;cursor:not-allowed;}
 .grid{display:flex;flex-wrap:wrap;gap:10px;}
 .thumb{display:flex;flex-direction:column;align-items:center;cursor:pointer;}
 .thumb img{width:60px;height:60px;border-radius:6px;border:2px solid #ddd;object-fit:cover;transition:0.2s;}
@@ -57,8 +56,8 @@ button:disabled{background:#f0f0f0;cursor:not-allowed;}
         <div class="group">
             <h3>Warna Bordir</h3>
             <div class="tab">
-                <button id="btnGold" onclick="setBordir('Gold')" disabled>Gold</button>
-                <button id="btnSilver" onclick="setBordir('Silver')" disabled>Silver</button>
+                <button onclick="setBordir('Gold')">Gold</button>
+                <button onclick="setBordir('Silver')">Silver</button>
             </div>
         </div>
 
@@ -89,10 +88,8 @@ button:disabled{background:#f0f0f0;cursor:not-allowed;}
 <script>
 // STATE
 let model = 1;
-let bordir = "";
+let bordir = "Gold";
 let motif = "Motif_Kait";
-let bahanSelected = false;
-let bordirSelected = false;
 
 // DATA
 const models = ["1","2","3","4","5","6","7","8","9","PPG_1","PPG_2","PPG_3"];
@@ -106,7 +103,6 @@ function loadModels(){
         let btn = document.createElement("button");
         btn.textContent = m;
         btn.onclick = ()=> setModel(m);
-        btn.disabled = true;
         container.appendChild(btn);
     });
 }
@@ -122,49 +118,29 @@ function loadMotifs(){
         div.onclick = ()=> setMotif(m);
         div.innerHTML = `<img loading="lazy" src="images/Thumb/${m}_thumb.png"><span>${name}</span>`;
         container.appendChild(div);
-        div.style.pointerEvents = "none";
     });
 }
 
 // SET FUNCTIONS
 function setWarna(w){
     document.getElementById("warna").src = "images/Bahan/Bahan_" + w + ".png";
-    bahanSelected = true;
-    enableBordir();
-}
-function enableBordir(){
-    if(bahanSelected){
-        document.getElementById("btnGold").disabled = false;
-        document.getElementById("btnSilver").disabled = false;
-    }
 }
 function setBordir(b){
     bordir = b;
-    bordirSelected = true;
     updateModel();
     updateMotif();
-    enableModel();
-}
-function enableModel(){
-    if(bordirSelected){
-        document.querySelectorAll("#modelOptions button").forEach(btn=> btn.disabled = false);
-    }
 }
 function setModel(n){
     model = n;
     let modelFile = n.startsWith("PPG_") ? n + "_" + bordir + ".png" : "Model_" + n + "_" + bordir + ".png";
     document.getElementById("model").src = "images/Model/" + modelFile;
-    enableMotif();
-}
-function enableMotif(){
-    document.querySelectorAll("#motifList .thumb").forEach(t=> t.style.pointerEvents = "auto");
 }
 function setMotif(m){
     motif = m;
-    if(m === "Motif_Polos"){
-        document.getElementById("motif").src = "images/Motif/Motif_Polos.png";
+    if(m==="Motif_Polos"){
+        document.getElementById("motif").src="images/Motif/Motif_Polos.png";
     } else {
-        document.getElementById("motif").src = "images/Motif/" + m + "_" + bordir + ".png";
+        document.getElementById("motif").src="images/Motif/"+m+"_"+bordir+".png";
     }
     document.querySelectorAll("#motifList .thumb").forEach(t=>t.classList.remove("active"));
     const thumb = document.querySelector(`#motifList img[src*='${m}_thumb.png']`);
@@ -173,42 +149,29 @@ function setMotif(m){
 
 // SUBMIT FULL SCREEN
 function submitSelection(){
-    const overlay = document.getElementById("overlay");
-    const canvas = document.getElementById("fullCanvas");
-    const ctx = canvas.getContext("2d");
-
-    overlay.style.display = "flex";
-    overlay.querySelector("span").style.display = "block";
-
-    const imgWarna = new Image();
-    const imgModel = new Image();
-    const imgMotif = new Image();
-
-    imgWarna.crossOrigin = "anonymous";
-    imgModel.crossOrigin = "anonymous";
-    imgMotif.crossOrigin = "anonymous";
-
-    imgWarna.src = document.getElementById("warna").src;
-    imgModel.src = document.getElementById("model").src;
-    imgMotif.src = document.getElementById("motif").src;
-
-    let loaded = 0;
+    const overlay=document.getElementById("overlay");
+    const canvas=document.getElementById("fullCanvas");
+    const ctx=canvas.getContext("2d");
+    overlay.style.display="flex";
+    overlay.querySelector("span").style.display="block";
+    const imgWarna=new Image(),imgModel=new Image(),imgMotif=new Image();
+    imgWarna.crossOrigin="anonymous";
+    imgModel.crossOrigin="anonymous";
+    imgMotif.crossOrigin="anonymous";
+    imgWarna.src=document.getElementById("warna").src;
+    imgModel.src=document.getElementById("model").src;
+    imgMotif.src=document.getElementById("motif").src;
+    let loaded=0;
     [imgWarna,imgModel,imgMotif].forEach(img=>{
-        img.onload = ()=>{
+        img.onload=()=>{
             loaded++;
             if(loaded===3){
-                const screenRatio = window.innerWidth/window.innerHeight;
-                const imgRatio = imgModel.width/imgModel.height;
-                let drawWidth, drawHeight;
-                if(imgRatio>screenRatio){
-                    drawWidth = window.innerWidth*0.9;
-                    drawHeight = drawWidth/imgRatio;
-                } else {
-                    drawHeight = window.innerHeight*0.9;
-                    drawWidth = drawHeight*imgRatio;
-                }
-                canvas.width = drawWidth;
-                canvas.height = drawHeight;
+                const screenRatio=window.innerWidth/window.innerHeight;
+                const imgRatio=imgModel.width/imgModel.height;
+                let drawWidth,drawHeight;
+                if(imgRatio>screenRatio){drawWidth=window.innerWidth*0.9; drawHeight=drawWidth/imgRatio;}
+                else{drawHeight=window.innerHeight*0.9; drawWidth=drawHeight*imgRatio;}
+                canvas.width=drawWidth; canvas.height=drawHeight;
                 ctx.clearRect(0,0,canvas.width,canvas.height);
                 ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height);
                 ctx.drawImage(imgModel,0,0,canvas.width,canvas.height);
@@ -220,14 +183,17 @@ function submitSelection(){
     });
 }
 function closeOverlay(){
-    document.getElementById("overlay").style.display = "none";
-    document.getElementById("fullCanvas").style.display = "none";
+    document.getElementById("overlay").style.display="none";
+    document.getElementById("fullCanvas").style.display="none";
 }
 
 // INIT
 loadModels();
 loadMotifs();
 setWarna("Navy");
+setBordir("Gold");
+setModel("1");
+setMotif("Motif_Kait");
 </script>
 </body>
 </html>
