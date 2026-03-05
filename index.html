@@ -9,7 +9,7 @@
 
 body{
 font-family:Arial;
-background:#f4f4f4;
+background:#f5f5f5;
 margin:0;
 }
 
@@ -32,25 +32,15 @@ position:relative;
 width:100%;
 }
 
-.sash{
+.layer{
 position:absolute;
 top:0;
 left:0;
 }
 
-.nama{
-position:absolute;
-top:160px;
-right:90px;
-color:white;
-font-size:26px;
-font-weight:bold;
-transform:rotate(90deg);
-}
-
 .controls{
 flex:1;
-min-width:300px;
+min-width:320px;
 }
 
 .group{
@@ -67,44 +57,32 @@ gap:10px;
 flex-wrap:wrap;
 }
 
-.options img{
-width:60px;
-height:60px;
-border-radius:6px;
+.options button{
+padding:10px 15px;
+border:none;
+background:#ddd;
 cursor:pointer;
-border:3px solid transparent;
 }
 
-.options img.active{
-border:3px solid #007bff;
+.options button.active{
+background:#007bff;
+color:white;
 }
 
-.color{
-width:35px;
-height:35px;
-border-radius:50%;
-cursor:pointer;
-border:3px solid transparent;
-}
-
-.color.active{
-border:3px solid black;
+.nama{
+position:absolute;
+top:160px;
+right:80px;
+color:white;
+font-size:26px;
+font-weight:bold;
+transform:rotate(90deg);
 }
 
 input{
+width:100%;
 padding:10px;
-width:100%;
 font-size:16px;
-}
-
-button{
-padding:12px;
-background:#007bff;
-border:none;
-color:white;
-width:100%;
-margin-top:10px;
-cursor:pointer;
 }
 
 </style>
@@ -117,9 +95,11 @@ cursor:pointer;
 <!-- PREVIEW -->
 <div class="preview">
 
-<img src="images/manekin.png">
+<img src="images/Model Gold 1.png">
 
-<img id="sashLayer" class="sash" src="images/model1.png">
+<img id="warna" class="layer" src="images/Bahan Navy.png">
+
+<img id="motif" class="layer" src="images/Motif Daun.png">
 
 <div id="namaPreview" class="nama">Nama Anda</div>
 
@@ -129,76 +109,91 @@ cursor:pointer;
 <!-- CONTROL -->
 <div class="controls">
 
+<!-- MODEL -->
 <div class="group">
 <h3>Pilih Model</h3>
 
 <div class="options">
 
-<img src="images/model1_thumb.png" onclick="selectModel('model1.png',this)">
-<img src="images/model2_thumb.png" onclick="selectModel('model2.png',this)">
-<img src="images/model3_thumb.png" onclick="selectModel('model3.png',this)">
-<img src="images/model4_thumb.png" onclick="selectModel('model4.png',this)">
+<button onclick="changeModel('Model Gold 1.png',this)">1</button>
+<button onclick="changeModel('Model Gold 2.png',this)">2</button>
+<button onclick="changeModel('Model Gold 3.png',this)">3</button>
+<button onclick="changeModel('Model Gold 4.png',this)">4</button>
+<button onclick="changeModel('Model Gold 5.png',this)">5</button>
+<button onclick="changeModel('Model Gold 6.png',this)">6</button>
+<button onclick="changeModel('Model Gold 7.png',this)">7</button>
+<button onclick="changeModel('Model Gold 8.png',this)">8</button>
+<button onclick="changeModel('Model Gold 9.png',this)">9</button>
 
 </div>
 </div>
 
 
+<!-- WARNA -->
 <div class="group">
-<h3>Pilih Warna Bahan</h3>
+<h3>Warna Bahan</h3>
 
 <div class="options">
 
-<div class="color" style="background:#800000" onclick="changeColor('maroon.png',this)"></div>
-<div class="color" style="background:#001f3f" onclick="changeColor('navy.png',this)"></div>
-<div class="color" style="background:black" onclick="changeColor('black.png',this)"></div>
+<button onclick="changeColor('Bahan Hitam.png',this)">Hitam</button>
+<button onclick="changeColor('Bahan Maroon.png',this)">Maroon</button>
+<button onclick="changeColor('Bahan Navy.png',this)">Navy</button>
 
 </div>
 </div>
 
 
+<!-- MOTIF -->
 <div class="group">
+<h3>Pilih Motif</h3>
+
+<div class="options">
+
+<button onclick="changeMotif('Motif Daun.png',this)">Daun</button>
+<button onclick="changeMotif('Motif Flora.png',this)">Flora</button>
+<button onclick="changeMotif('Motif Kait.png',this)">Kait</button>
+<button onclick="changeMotif('Motif Klasik.png',this)">Klasik</button>
+
+</div>
+</div>
+
+
+<!-- NAMA -->
+<div class="group">
+
 <h3>Nama di Selempang</h3>
 
-<input type="text" id="namaInput" placeholder="Tulis nama anda" onkeyup="updateNama()">
-
-</div>
-
-<button>Pesan Sekarang</button>
+<input type="text" placeholder="Tulis nama..." onkeyup="updateNama(this.value)">
 
 </div>
 
 </div>
 
+</div>
 
 <script>
 
-function updateNama(){
+function changeModel(img){
 
-let nama=document.getElementById("namaInput").value;
+document.querySelector(".preview img").src="images/"+img;
+
+}
+
+function changeColor(img){
+
+document.getElementById("warna").src="images/"+img;
+
+}
+
+function changeMotif(img){
+
+document.getElementById("motif").src="images/"+img;
+
+}
+
+function updateNama(nama){
 
 document.getElementById("namaPreview").innerText=nama;
-
-}
-
-
-function selectModel(img,el){
-
-document.getElementById("sashLayer").src="images/"+img;
-
-document.querySelectorAll(".options img").forEach(i=>i.classList.remove("active"))
-
-el.classList.add("active")
-
-}
-
-
-function changeColor(img,el){
-
-document.getElementById("sashLayer").src="images/"+img;
-
-document.querySelectorAll(".color").forEach(c=>c.classList.remove("active"))
-
-el.classList.add("active")
 
 }
 
