@@ -87,7 +87,7 @@ button:hover{background:#bbb;}
 
 <script>
 // STATE
-let model = 1;
+let model = "1";
 let bordir = "Gold";
 let motif = "Motif_Kait";
 
@@ -135,6 +135,10 @@ function setModel(n){
     let modelFile = n.startsWith("PPG_") ? n + "_" + bordir + ".png" : "Model_" + n + "_" + bordir + ".png";
     document.getElementById("model").src = "images/Model/" + modelFile;
 }
+function updateModel(){ setModel(model); }
+function updateMotif(){
+    setMotif(motif);
+}
 function setMotif(m){
     motif = m;
     if(m==="Motif_Polos"){
@@ -147,35 +151,57 @@ function setMotif(m){
     if(thumb) thumb.parentElement.classList.add("active");
 }
 
-// SUBMIT FULL SCREEN
+// SUBMIT FULL SCREEN HIGH QUALITY
 function submitSelection(){
-    const overlay=document.getElementById("overlay");
-    const canvas=document.getElementById("fullCanvas");
-    const ctx=canvas.getContext("2d");
-    overlay.style.display="flex";
-    overlay.querySelector("span").style.display="block";
-    const imgWarna=new Image(),imgModel=new Image(),imgMotif=new Image();
-    imgWarna.crossOrigin="anonymous";
-    imgModel.crossOrigin="anonymous";
-    imgMotif.crossOrigin="anonymous";
-    imgWarna.src=document.getElementById("warna").src;
-    imgModel.src=document.getElementById("model").src;
-    imgMotif.src=document.getElementById("motif").src;
-    let loaded=0;
+    const overlay = document.getElementById("overlay");
+    const canvas = document.getElementById("fullCanvas");
+    const ctx = canvas.getContext("2d");
+
+    overlay.style.display = "flex";
+    overlay.querySelector("span").style.display = "block";
+
+    const imgWarna = new Image();
+    const imgModel = new Image();
+    const imgMotif = new Image();
+
+    imgWarna.crossOrigin = "anonymous";
+    imgModel.crossOrigin = "anonymous";
+    imgMotif.crossOrigin = "anonymous";
+
+    imgWarna.src = document.getElementById("warna").src;
+    imgModel.src = document.getElementById("model").src;
+    imgMotif.src = document.getElementById("motif").src;
+
+    let loaded = 0;
     [imgWarna,imgModel,imgMotif].forEach(img=>{
-        img.onload=()=>{
+        img.onload = ()=>{
             loaded++;
-            if(loaded===3){
-                const screenRatio=window.innerWidth/window.innerHeight;
-                const imgRatio=imgModel.width/imgModel.height;
-                let drawWidth,drawHeight;
-                if(imgRatio>screenRatio){drawWidth=window.innerWidth*0.9; drawHeight=drawWidth/imgRatio;}
-                else{drawHeight=window.innerHeight*0.9; drawWidth=drawHeight*imgRatio;}
-                canvas.width=drawWidth; canvas.height=drawHeight;
-                ctx.clearRect(0,0,canvas.width,canvas.height);
+            if(loaded === 3){
+                const scaleFactor = 2;
+                const imgRatio = imgModel.width / imgModel.height;
+                let drawWidth, drawHeight;
+                if(imgRatio > window.innerWidth/window.innerHeight){
+                    drawWidth = window.innerWidth * 0.9 * scaleFactor;
+                    drawHeight = drawWidth / imgRatio;
+                } else {
+                    drawHeight = window.innerHeight * 0.9 * scaleFactor;
+                    drawWidth = drawHeight * imgRatio;
+                }
+
+                canvas.width = drawWidth;
+                canvas.height = drawHeight;
+
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
                 ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height);
                 ctx.drawImage(imgModel,0,0,canvas.width,canvas.height);
                 ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height);
+
+                canvas.style.width = (canvas.width/scaleFactor) + "px";
+                canvas.style.height = (canvas.height/scaleFactor) + "px";
+
                 overlay.querySelector("span").style.display="none";
                 canvas.style.display="block";
             }
