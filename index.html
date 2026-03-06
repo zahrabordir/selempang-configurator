@@ -1,236 +1,478 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Custom Selempang Wisuda</title>
+
 <style>
-body{font-family:Arial,sans-serif;background:#f2f2f2;margin:0;padding:0;}
-.container{max-width:1200px;margin:auto;padding:30px;display:flex;flex-wrap:wrap;gap:40px;}
-.preview{flex:1;min-width:300px;position:relative;aspect-ratio:1/1;border:1px solid #ccc;background:#fff;}
-.preview img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;}
-#warna{z-index:1;} #model{z-index:2;} #motif{z-index:3;}
-.controls{flex:1;min-width:280px;}
-.group{margin-bottom:30px;}
-.group h3{margin-bottom:10px;}
-.options{display:flex;flex-wrap:wrap;gap:10px;}
-button{padding:8px 12px;border:none;background:#ddd;cursor:pointer;border-radius:5px;transition:0.2s;}
-button:hover{background:#bbb;}
-.grid{display:flex;flex-wrap:wrap;gap:10px;}
-.thumb{display:flex;flex-direction:column;align-items:center;cursor:pointer;}
-.thumb img{width:60px;height:60px;border-radius:6px;border:2px solid #ddd;object-fit:cover;transition:0.2s;}
-.thumb span{font-size:13px;margin-top:4px;text-align:center;}
-.thumb.active img{border-color:#444;}
-.tab{display:flex;gap:10px;margin-bottom:10px;}
-.tab button{flex:1;}
-#submitBtn{margin-top:20px;background:#4CAF50;color:#fff;}
-#submitBtn:hover{background:#45a049;}
-#overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);z-index:9999;justify-content:center;align-items:center;flex-direction:column;}
-#fullCanvas{background:#fff;}
-#overlay span{color:#fff;margin-bottom:10px;}
-#closeOverlay{margin-top:20px;padding:8px 14px;cursor:pointer;border:none;border-radius:5px;background:#fff;}
-@media(max-width:768px){.container{flex-direction:column;gap:20px;}}
+
+body{
+font-family:Arial,sans-serif;
+background:#f2f2f2;
+margin:0;
+padding:0;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:30px;
+display:flex;
+flex-wrap:wrap;
+gap:40px;
+}
+
+.preview{
+flex:1;
+min-width:300px;
+position:relative;
+aspect-ratio:1/1;
+border:1px solid #ccc;
+background:#fff;
+}
+
+.preview img{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:contain;
+}
+
+#warna{z-index:1;}
+#model{z-index:2;}
+#motif{z-index:3;}
+
+.controls{
+flex:1;
+min-width:280px;
+}
+
+.group{
+margin-bottom:30px;
+}
+
+.group h3{
+margin-bottom:10px;
+}
+
+.options{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+button{
+padding:8px 12px;
+border:none;
+background:#ddd;
+cursor:pointer;
+border-radius:5px;
+transition:0.2s;
+}
+
+button:hover{
+background:#bbb;
+}
+
+.grid{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.thumb{
+display:flex;
+flex-direction:column;
+align-items:center;
+cursor:pointer;
+}
+
+.thumb img{
+width:60px;
+height:60px;
+border-radius:6px;
+border:2px solid #ddd;
+object-fit:cover;
+transition:0.2s;
+}
+
+.thumb span{
+font-size:13px;
+margin-top:4px;
+text-align:center;
+}
+
+.thumb.active img{
+border-color:#444;
+}
+
+.tab{
+display:flex;
+gap:10px;
+margin-bottom:10px;
+}
+
+.tab button{
+flex:1;
+}
+
+#submitBtn{
+margin-top:20px;
+background:#4CAF50;
+color:#fff;
+}
+
+#submitBtn:hover{
+background:#45a049;
+}
+
+/* OVERLAY */
+
+#overlay{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100vw;
+height:100vh;
+background:rgba(0,0,0,0.95);
+z-index:9999;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+}
+
+#overlay span{
+color:white;
+margin-bottom:15px;
+}
+
+#fullCanvas{
+max-width:90vw;
+max-height:90vh;
+background:#fff;
+}
+
+/* CLOSE BUTTON FIXED */
+
+#closeOverlay{
+position:fixed;
+top:20px;
+right:20px;
+padding:10px 16px;
+border:none;
+border-radius:6px;
+background:#fff;
+font-weight:bold;
+cursor:pointer;
+z-index:10000;
+}
+
+@media(max-width:768px){
+
+.container{
+flex-direction:column;
+gap:20px;
+}
+
+}
+
 </style>
 </head>
+
 <body>
 
 <div class="container">
-    <div class="preview">
-        <img id="warna" src="">
-        <img id="model" src="">
-        <img id="motif" src="">
-    </div>
 
-    <div class="controls">
-        <!-- BAHAN -->
-        <div class="group">
-            <h3>Pilih Bahan</h3>
-            <div class="options">
-                <button onclick="setWarna('Hitam')">Hitam</button>
-                <button onclick="setWarna('Maroon')">Maroon</button>
-                <button onclick="setWarna('Navy')">Navy</button>
-            </div>
-        </div>
-
-        <!-- WARNA BORDIR -->
-        <div class="group">
-            <h3>Warna Bordir</h3>
-            <div class="tab">
-                <button onclick="setBordir('Gold')">Gold</button>
-                <button onclick="setBordir('Silver')">Silver</button>
-            </div>
-        </div>
-
-        <!-- MODEL -->
-        <div class="group">
-            <h3>Pilih Model</h3>
-            <div class="options" id="modelOptions"></div>
-        </div>
-
-        <!-- MOTIF -->
-        <div class="group">
-            <h3>Pilih Motif</h3>
-            <div class="grid" id="motifList"></div>
-        </div>
-
-        <!-- SUBMIT -->
-        <button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
-    </div>
+<div class="preview">
+<img id="warna" src="">
+<img id="model" src="">
+<img id="motif" src="">
 </div>
 
-<!-- FULL SCREEN OVERLAY -->
+<div class="controls">
+
+<div class="group">
+<h3>Pilih Bahan</h3>
+<div class="options">
+<button onclick="setWarna('Hitam')">Hitam</button>
+<button onclick="setWarna('Maroon')">Maroon</button>
+<button onclick="setWarna('Navy')">Navy</button>
+</div>
+</div>
+
+<div class="group">
+<h3>Warna Bordir</h3>
+<div class="tab">
+<button onclick="setBordir('Gold')">Gold</button>
+<button onclick="setBordir('Silver')">Silver</button>
+</div>
+</div>
+
+<div class="group">
+<h3>Pilih Model</h3>
+<div class="options" id="modelOptions"></div>
+</div>
+
+<div class="group">
+<h3>Pilih Motif</h3>
+<div class="grid" id="motifList"></div>
+</div>
+
+<button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
+
+</div>
+</div>
+
+
+<!-- OVERLAY -->
+
 <div id="overlay">
-    <span>Loading preview...</span>
-    <canvas id="fullCanvas"></canvas>
-    <button id="closeOverlay" onclick="closeOverlay()">Close</button>
+
+<span>Loading preview...</span>
+
+<canvas id="fullCanvas"></canvas>
+
+<button id="closeOverlay" onclick="closeOverlay()">Close</button>
+
 </div>
+
 
 <script>
-// STATE
-let model = "1";
-let bordir = "Gold";
-let motif = "Motif_Kait";
 
-// DATA
-const models = ["1","2","3","4","5","6","7","8","9","PPG_1","PPG_2","PPG_3"];
-const motifs = ["Motif_Daun","Motif_Flora","Motif_Kait","Motif_Klasik","Motif_Polos","Motif_Serat","Motif_Simpul"];
+let model="1";
+let bordir="Gold";
+let motif="Motif_Kait";
 
-// LOAD MODEL BUTTONS
+const models=["1","2","3","4","5","6","7","8","9","PPG_1","PPG_2","PPG_3"];
+
+const motifs=[
+"Motif_Daun",
+"Motif_Flora",
+"Motif_Kait",
+"Motif_Klasik",
+"Motif_Polos",
+"Motif_Serat",
+"Motif_Simpul"
+];
+
 function loadModels(){
-    const container = document.getElementById("modelOptions");
-    container.innerHTML = "";
-    models.forEach(m=>{
-        let btn = document.createElement("button");
-        btn.textContent = m;
-        btn.onclick = ()=> setModel(m);
-        container.appendChild(btn);
-    });
+
+const container=document.getElementById("modelOptions");
+container.innerHTML="";
+
+models.forEach(m=>{
+
+let btn=document.createElement("button");
+btn.textContent=m;
+btn.onclick=()=>setModel(m);
+
+container.appendChild(btn);
+
+});
+
 }
 
-// LOAD MOTIF
 function loadMotifs(){
-    const container = document.getElementById("motifList");
-    container.innerHTML = "";
-    motifs.forEach(m=>{
-        let name = m.replace("Motif_","");
-        const div = document.createElement("div");
-        div.className = "thumb";
-        div.onclick = ()=> setMotif(m);
-        div.innerHTML = `<img loading="lazy" src="images/Thumb/${m}_thumb.png"><span>${name}</span>`;
-        container.appendChild(div);
-    });
+
+const container=document.getElementById("motifList");
+container.innerHTML="";
+
+motifs.forEach(m=>{
+
+let name=m.replace("Motif_","");
+
+const div=document.createElement("div");
+
+div.className="thumb";
+
+div.onclick=()=>setMotif(m);
+
+div.innerHTML=`
+<img loading="lazy" src="images/Thumb/${m}_thumb.png">
+<span>${name}</span>
+`;
+
+container.appendChild(div);
+
+});
+
 }
 
-// SET FUNCTIONS
-function setWarna(w){ document.getElementById("warna").src = "images/Bahan/Bahan_" + w + ".png"; }
-function setBordir(b){ bordir = b; updateModel(); updateMotif(); }
+function setWarna(w){
+
+document.getElementById("warna").src=
+"images/Bahan/Bahan_"+w+".png";
+
+}
+
+function setBordir(b){
+
+bordir=b;
+
+updateModel();
+updateMotif();
+
+}
+
 function setModel(n){
-    model = n;
-    let modelFile = n.startsWith("PPG_") ? n + "_" + bordir + ".png" : "Model_" + n + "_" + bordir + ".png";
-    document.getElementById("model").src = "images/Model/" + modelFile;
+
+model=n;
+
+let modelFile=n.startsWith("PPG_")
+? n+"_"+bordir+".png"
+: "Model_"+n+"_"+bordir+".png";
+
+document.getElementById("model").src=
+"images/Model/"+modelFile;
+
 }
-function updateModel(){ setModel(model); }
-function updateMotif(){ setMotif(motif); }
+
+function updateModel(){
+
+setModel(model);
+
+}
+
+function updateMotif(){
+
+setMotif(motif);
+
+}
+
 function setMotif(m){
-    motif = m;
-    if(m==="Motif_Polos"){
-        document.getElementById("motif").src="images/Motif/Motif_Polos.png";
-    } else {
-        document.getElementById("motif").src="images/Motif/"+m+"_"+bordir+".png";
-    }
-    document.querySelectorAll("#motifList .thumb").forEach(t=>t.classList.remove("active"));
-    const thumb = document.querySelector(`#motifList img[src*='${m}_thumb.png']`);
-    if(thumb) thumb.parentElement.classList.add("active");
+
+motif=m;
+
+if(m==="Motif_Polos"){
+
+document.getElementById("motif").src=
+"images/Motif/Motif_Polos.png";
+
+}else{
+
+document.getElementById("motif").src=
+"images/Motif/"+m+"_"+bordir+".png";
+
 }
 
-// FULL SCREEN SUBMIT WITH ZOOM
-let canvasScale = 1;
+document.querySelectorAll("#motifList .thumb")
+.forEach(t=>t.classList.remove("active"));
+
+const thumb=document.querySelector(
+`#motifList img[src*='${m}_thumb.png']`
+);
+
+if(thumb) thumb.parentElement.classList.add("active");
+
+}
+
+
+let canvasScale=1;
+
 function submitSelection(){
-    const overlay = document.getElementById("overlay");
-    const canvas = document.getElementById("fullCanvas");
-    const ctx = canvas.getContext("2d");
 
-    overlay.style.display = "flex";
-    overlay.querySelector("span").style.display = "block";
+const overlay=document.getElementById("overlay");
 
-    const imgWarna = new Image();
-    const imgModel = new Image();
-    const imgMotif = new Image();
+const canvas=document.getElementById("fullCanvas");
 
-    imgWarna.crossOrigin = "anonymous";
-    imgModel.crossOrigin = "anonymous";
-    imgMotif.crossOrigin = "anonymous";
+const ctx=canvas.getContext("2d");
 
-    imgWarna.src = document.getElementById("warna").src;
-    imgModel.src = document.getElementById("model").src;
-    imgMotif.src = document.getElementById("motif").src;
+overlay.style.display="flex";
 
-    let loaded = 0;
-    [imgWarna,imgModel,imgMotif].forEach(img=>{
-        img.onload = ()=>{
-            loaded++;
-            if(loaded === 3){
-                canvasScale = 1;
-                const scaleFactor = 2;
-                const imgRatio = imgModel.width / imgModel.height;
-                let drawWidth, drawHeight;
-                if(imgRatio > window.innerWidth/window.innerHeight){
-                    drawWidth = window.innerWidth * 0.9 * scaleFactor;
-                    drawHeight = drawWidth / imgRatio;
-                } else {
-                    drawHeight = window.innerHeight * 0.9 * scaleFactor;
-                    drawWidth = drawHeight * imgRatio;
-                }
+const imgWarna=new Image();
+const imgModel=new Image();
+const imgMotif=new Image();
 
-                canvas.width = drawWidth;
-                canvas.height = drawHeight;
+imgWarna.src=document.getElementById("warna").src;
+imgModel.src=document.getElementById("model").src;
+imgMotif.src=document.getElementById("motif").src;
 
-                ctx.imageSmoothingEnabled = true;
-                ctx.imageSmoothingQuality = "high";
+let loaded=0;
 
-                function drawCanvas(){
-                    ctx.clearRect(0,0,canvas.width,canvas.height);
-                    ctx.save();
-                    ctx.translate(canvas.width/2, canvas.height/2);
-                    ctx.scale(canvasScale, canvasScale);
-                    ctx.translate(-canvas.width/2, -canvas.height/2);
-                    ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height);
-                    ctx.drawImage(imgModel,0,0,canvas.width,canvas.height);
-                    ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height);
-                    ctx.restore();
-                }
+[imgWarna,imgModel,imgMotif].forEach(img=>{
 
-                drawCanvas();
+img.onload=()=>{
 
-                // Zoom with mouse wheel
-                canvas.onwheel = function(e){
-                    e.preventDefault();
-                    const delta = e.deltaY>0?-0.1:0.1;
-                    canvasScale += delta;
-                    if(canvasScale < 0.1) canvasScale = 0.1;
-                    if(canvasScale > 5) canvasScale = 5;
-                    drawCanvas();
-                };
+loaded++;
 
-                overlay.querySelector("span").style.display="none";
-                canvas.style.display="block";
-            }
-        };
-    });
+if(loaded===3){
+
+canvasScale=1;
+
+const scaleFactor=2;
+
+canvas.width=imgModel.width*scaleFactor;
+canvas.height=imgModel.height*scaleFactor;
+
+ctx.imageSmoothingEnabled=true;
+ctx.imageSmoothingQuality="high";
+
+function drawCanvas(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ctx.save();
+
+ctx.translate(canvas.width/2,canvas.height/2);
+
+ctx.scale(canvasScale,canvasScale);
+
+ctx.translate(-canvas.width/2,-canvas.height/2);
+
+ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height);
+ctx.drawImage(imgModel,0,0,canvas.width,canvas.height);
+ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height);
+
+ctx.restore();
+
+}
+
+drawCanvas();
+
+canvas.onwheel=function(e){
+
+e.preventDefault();
+
+const delta=e.deltaY>0?-0.1:0.1;
+
+canvasScale+=delta;
+
+if(canvasScale<0.1)canvasScale=0.1;
+if(canvasScale>5)canvasScale=5;
+
+drawCanvas();
+
+};
+
+}
+
+};
+
+});
+
 }
 
 function closeOverlay(){
-    document.getElementById("overlay").style.display="none";
-    document.getElementById("fullCanvas").style.display="none";
+
+document.getElementById("overlay").style.display="none";
+
 }
 
-// INIT
 loadModels();
 loadMotifs();
+
 setWarna("Navy");
 setBordir("Gold");
 setModel("1");
 setMotif("Motif_Kait");
+
 </script>
+
 </body>
 </html>
+```
