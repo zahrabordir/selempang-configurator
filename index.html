@@ -8,10 +8,9 @@
 <style>
 
 body{
-font-family:Arial,sans-serif;
-background:#f2f2f2;
+font-family:Arial;
 margin:0;
-padding:0;
+background:#f2f2f2;
 }
 
 .container{
@@ -41,9 +40,9 @@ height:100%;
 object-fit:contain;
 }
 
-#warna{z-index:1;}
-#model{z-index:2;}
-#motif{z-index:3;}
+#warna{z-index:1}
+#model{z-index:2}
+#motif{z-index:3}
 
 .controls{
 flex:1;
@@ -51,11 +50,7 @@ min-width:280px;
 }
 
 .group{
-margin-bottom:30px;
-}
-
-.group h3{
-margin-bottom:10px;
+margin-bottom:25px;
 }
 
 .options{
@@ -70,7 +65,6 @@ border:none;
 background:#ddd;
 cursor:pointer;
 border-radius:5px;
-transition:0.2s;
 }
 
 button:hover{
@@ -93,40 +87,19 @@ cursor:pointer;
 .thumb img{
 width:60px;
 height:60px;
-border-radius:6px;
 border:2px solid #ddd;
+border-radius:6px;
 object-fit:cover;
-transition:0.2s;
-}
-
-.thumb span{
-font-size:13px;
-margin-top:4px;
-text-align:center;
 }
 
 .thumb.active img{
-border-color:#444;
-}
-
-.tab{
-display:flex;
-gap:10px;
-margin-bottom:10px;
-}
-
-.tab button{
-flex:1;
+border-color:#000;
 }
 
 #submitBtn{
 margin-top:20px;
 background:#4CAF50;
 color:#fff;
-}
-
-#submitBtn:hover{
-background:#45a049;
 }
 
 /* OVERLAY */
@@ -145,39 +118,32 @@ align-items:center;
 flex-direction:column;
 }
 
-#overlay span{
-color:white;
-margin-bottom:15px;
-}
-
 #fullCanvas{
 max-width:90vw;
 max-height:90vh;
 background:#fff;
 }
 
-/* CLOSE BUTTON FIXED */
-
 #closeOverlay{
 position:fixed;
 top:20px;
 right:20px;
-padding:10px 16px;
-border:none;
-border-radius:6px;
 background:#fff;
-font-weight:bold;
+padding:10px 15px;
+border-radius:6px;
 cursor:pointer;
 z-index:10000;
 }
 
-@media(max-width:768px){
-
-.container{
-flex-direction:column;
-gap:20px;
+.actionButtons{
+position:fixed;
+bottom:30px;
+display:flex;
+gap:10px;
 }
 
+.actionButtons button{
+background:#fff;
 }
 
 </style>
@@ -188,15 +154,15 @@ gap:20px;
 <div class="container">
 
 <div class="preview">
-<img id="warna" src="">
-<img id="model" src="">
-<img id="motif" src="">
+<img id="warna">
+<img id="model">
+<img id="motif">
 </div>
 
 <div class="controls">
 
 <div class="group">
-<h3>Pilih Bahan</h3>
+<h3>Bahan</h3>
 <div class="options">
 <button onclick="setWarna('Hitam')">Hitam</button>
 <button onclick="setWarna('Maroon')">Maroon</button>
@@ -206,19 +172,19 @@ gap:20px;
 
 <div class="group">
 <h3>Warna Bordir</h3>
-<div class="tab">
+<div class="options">
 <button onclick="setBordir('Gold')">Gold</button>
 <button onclick="setBordir('Silver')">Silver</button>
 </div>
 </div>
 
 <div class="group">
-<h3>Pilih Model</h3>
+<h3>Model</h3>
 <div class="options" id="modelOptions"></div>
 </div>
 
 <div class="group">
-<h3>Pilih Motif</h3>
+<h3>Motif</h3>
 <div class="grid" id="motifList"></div>
 </div>
 
@@ -228,26 +194,26 @@ gap:20px;
 </div>
 
 
-<!-- OVERLAY -->
-
 <div id="overlay">
-
-<span>Loading preview...</span>
-
-<canvas id="fullCanvas"></canvas>
 
 <button id="closeOverlay" onclick="closeOverlay()">Close</button>
 
+<canvas id="fullCanvas"></canvas>
+
+<div class="actionButtons">
+<button onclick="downloadPNG()">Download PNG</button>
+<button onclick="sendWhatsApp()">Kirim WhatsApp</button>
 </div>
 
+</div>
 
 <script>
 
-let model="1";
-let bordir="Gold";
-let motif="Motif_Kait";
+let model="1"
+let bordir="Gold"
+let motif="Motif_Kait"
 
-const models=["1","2","3","4","5","6","7","8","9","PPG_1","PPG_2","PPG_3"];
+const models=["1","2","3","4","5","6","7","8","9","PPG_1","PPG_2","PPG_3"]
 
 const motifs=[
 "Motif_Daun",
@@ -257,218 +223,251 @@ const motifs=[
 "Motif_Polos",
 "Motif_Serat",
 "Motif_Simpul"
-];
+]
 
 function loadModels(){
 
-const container=document.getElementById("modelOptions");
-container.innerHTML="";
+const container=document.getElementById("modelOptions")
 
 models.forEach(m=>{
 
-let btn=document.createElement("button");
-btn.textContent=m;
-btn.onclick=()=>setModel(m);
+let btn=document.createElement("button")
+btn.innerText=m
+btn.onclick=()=>setModel(m)
 
-container.appendChild(btn);
+container.appendChild(btn)
 
-});
+})
 
 }
 
 function loadMotifs(){
 
-const container=document.getElementById("motifList");
-container.innerHTML="";
+const container=document.getElementById("motifList")
 
 motifs.forEach(m=>{
 
-let name=m.replace("Motif_","");
+let name=m.replace("Motif_","")
 
-const div=document.createElement("div");
+let div=document.createElement("div")
+div.className="thumb"
 
-div.className="thumb";
+div.onclick=()=>setMotif(m)
 
-div.onclick=()=>setMotif(m);
+div.innerHTML=
+`<img src="images/Thumb/${m}_thumb.png">
+<span>${name}</span>`
 
-div.innerHTML=`
-<img loading="lazy" src="images/Thumb/${m}_thumb.png">
-<span>${name}</span>
-`;
+container.appendChild(div)
 
-container.appendChild(div);
-
-});
+})
 
 }
 
 function setWarna(w){
 
 document.getElementById("warna").src=
-"images/Bahan/Bahan_"+w+".png";
+"images/Bahan/Bahan_"+w+".png"
 
 }
 
 function setBordir(b){
 
-bordir=b;
-
-updateModel();
-updateMotif();
+bordir=b
+setModel(model)
+setMotif(motif)
 
 }
 
 function setModel(n){
 
-model=n;
+model=n
 
-let modelFile=n.startsWith("PPG_")
+let file=n.startsWith("PPG_")
 ? n+"_"+bordir+".png"
-: "Model_"+n+"_"+bordir+".png";
+: "Model_"+n+"_"+bordir+".png"
 
 document.getElementById("model").src=
-"images/Model/"+modelFile;
-
-}
-
-function updateModel(){
-
-setModel(model);
-
-}
-
-function updateMotif(){
-
-setMotif(motif);
+"images/Model/"+file
 
 }
 
 function setMotif(m){
 
-motif=m;
+motif=m
 
 if(m==="Motif_Polos"){
 
 document.getElementById("motif").src=
-"images/Motif/Motif_Polos.png";
+"images/Motif/Motif_Polos.png"
 
 }else{
 
 document.getElementById("motif").src=
-"images/Motif/"+m+"_"+bordir+".png";
+"images/Motif/"+m+"_"+bordir+".png"
 
 }
 
-document.querySelectorAll("#motifList .thumb")
-.forEach(t=>t.classList.remove("active"));
-
-const thumb=document.querySelector(
-`#motifList img[src*='${m}_thumb.png']`
-);
-
-if(thumb) thumb.parentElement.classList.add("active");
-
 }
 
+/* PREVIEW */
 
-let canvasScale=1;
+let canvasScale=1
+let offsetX=0
+let offsetY=0
+let isDragging=false
+let startX=0
+let startY=0
 
 function submitSelection(){
 
-const overlay=document.getElementById("overlay");
+const overlay=document.getElementById("overlay")
+const canvas=document.getElementById("fullCanvas")
+const ctx=canvas.getContext("2d")
 
-const canvas=document.getElementById("fullCanvas");
+overlay.style.display="flex"
 
-const ctx=canvas.getContext("2d");
+const imgWarna=new Image()
+const imgModel=new Image()
+const imgMotif=new Image()
 
-overlay.style.display="flex";
+imgWarna.src=document.getElementById("warna").src
+imgModel.src=document.getElementById("model").src
+imgMotif.src=document.getElementById("motif").src
 
-const imgWarna=new Image();
-const imgModel=new Image();
-const imgMotif=new Image();
+let loaded=0
 
-imgWarna.src=document.getElementById("warna").src;
-imgModel.src=document.getElementById("model").src;
-imgMotif.src=document.getElementById("motif").src;
+function draw(){
 
-let loaded=0;
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+ctx.save()
+
+ctx.translate(canvas.width/2+offsetX,canvas.height/2+offsetY)
+ctx.scale(canvasScale,canvasScale)
+ctx.translate(-canvas.width/2,-canvas.height/2)
+
+ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
+ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
+ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
+
+ctx.restore()
+
+}
 
 [imgWarna,imgModel,imgMotif].forEach(img=>{
 
 img.onload=()=>{
 
-loaded++;
+loaded++
 
 if(loaded===3){
 
-canvasScale=1;
+canvas.width=imgModel.width*2
+canvas.height=imgModel.height*2
 
-const scaleFactor=2;
+draw()
 
-canvas.width=imgModel.width*scaleFactor;
-canvas.height=imgModel.height*scaleFactor;
+canvas.onwheel=e=>{
 
-ctx.imageSmoothingEnabled=true;
-ctx.imageSmoothingQuality="high";
+e.preventDefault()
 
-function drawCanvas(){
+canvasScale+=e.deltaY>0?-0.1:0.1
 
-ctx.clearRect(0,0,canvas.width,canvas.height);
+if(canvasScale<0.2)canvasScale=0.2
+if(canvasScale>6)canvasScale=6
 
-ctx.save();
-
-ctx.translate(canvas.width/2,canvas.height/2);
-
-ctx.scale(canvasScale,canvasScale);
-
-ctx.translate(-canvas.width/2,-canvas.height/2);
-
-ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height);
-ctx.drawImage(imgModel,0,0,canvas.width,canvas.height);
-ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height);
-
-ctx.restore();
+draw()
 
 }
 
-drawCanvas();
+canvas.onmousedown=e=>{
 
-canvas.onwheel=function(e){
+isDragging=true
 
-e.preventDefault();
-
-const delta=e.deltaY>0?-0.1:0.1;
-
-canvasScale+=delta;
-
-if(canvasScale<0.1)canvasScale=0.1;
-if(canvasScale>5)canvasScale=5;
-
-drawCanvas();
-
-};
+startX=e.clientX-offsetX
+startY=e.clientY-offsetY
 
 }
 
-};
+canvas.onmousemove=e=>{
 
-});
+if(!isDragging)return
+
+offsetX=e.clientX-startX
+offsetY=e.clientY-startY
+
+draw()
+
+}
+
+canvas.onmouseup=()=>isDragging=false
+canvas.onmouseleave=()=>isDragging=false
+
+canvas.ondblclick=()=>{
+
+canvasScale=1
+offsetX=0
+offsetY=0
+
+draw()
+
+}
+
+}
+
+}
+
+})
 
 }
 
 function closeOverlay(){
 
-document.getElementById("overlay").style.display="none";
+document.getElementById("overlay").style.display="none"
 
 }
 
-loadModels();
-loadMotifs();
+function downloadPNG(){
 
-setWarna("Navy");
-setBordir("Gold");
-setModel("1");
-setMotif("Motif_Kait");
+const canvas=document.getElementById("fullCanvas")
+
+const link=document.createElement("a")
+
+link.download="selempang-custom.png"
+
+link.href=canvas.toDataURL("image/png")
+
+link.click()
+
+}
+
+function sendWhatsApp(){
+
+let bahan=document.getElementById("warna").src.split("Bahan_")[1].replace(".png","")
+
+let pesan=
+`Halo saya ingin memesan selempang wisuda
+
+Bahan : ${bahan}
+Model : ${model}
+Bordir : ${bordir}
+Motif : ${motif.replace("Motif_","")}`
+
+let nomor="628123456789"
+
+let url=`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`
+
+window.open(url,"_blank")
+
+}
+
+loadModels()
+loadMotifs()
+
+setWarna("Navy")
+setModel("1")
+setMotif("Motif_Kait")
 
 </script>
 
