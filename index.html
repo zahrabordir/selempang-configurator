@@ -444,10 +444,15 @@ link.click()
 
 function sendWhatsApp(){
 
+let namaGelar = prompt("Masukkan Nama dan Gelar (contoh: SITI AISYAH, S.Pd)")
+if(!namaGelar) return
+
 let bahan=document.getElementById("warna").src.split("Bahan_")[1].replace(".png","")
 
 let pesan=
 `Halo saya ingin memesan selempang wisuda
+
+Nama & Gelar : ${namaGelar.toUpperCase()}
 
 Bahan : ${bahan}
 Model : ${model}
@@ -473,4 +478,3 @@ setMotif("Motif_Kait")
 
 </body>
 </html>
-```
