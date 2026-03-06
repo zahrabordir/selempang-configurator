@@ -144,6 +144,13 @@ gap:10px;
 background:#fff;
 }
 
+input{
+width:100%;
+padding:8px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
 </style>
 </head>
 
@@ -188,15 +195,13 @@ background:#fff;
 
 <div class="group">
 <h3>Nama & Gelar</h3>
-<input id="namaGelar" type="text" placeholder="Contoh: Andi Saputra, S.T"
-style="width:100%;padding:8px;border:1px solid #ccc;border-radius:5px">
+<input id="namaGelar" placeholder="Contoh: Andi Saputra, S.T">
 </div>
 
 <button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
 
 </div>
 </div>
-
 
 <div id="overlay">
 
@@ -364,19 +369,6 @@ ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
 
-/* TEXT NAMA */
-
-let nama=document.getElementById("namaGelar").value || ""
-
-ctx.font="bold 90px Times New Roman"
-ctx.fillStyle="#d4af37"
-ctx.strokeStyle="#8c6b00"
-ctx.lineWidth=3
-ctx.textAlign="center"
-
-ctx.strokeText(nama, canvas.width/2, canvas.height*0.75)
-ctx.fillText(nama, canvas.width/2, canvas.height*0.75)
-
 ctx.restore()
 
 }
@@ -468,25 +460,59 @@ link.click()
 
 }
 
+function generateOrderID(){
+
+let date=new Date()
+
+let y=date.getFullYear()
+let m=(date.getMonth()+1).toString().padStart(2,"0")
+let d=date.getDate().toString().padStart(2,"0")
+
+let random=Math.floor(Math.random()*9000)+1000
+
+return `ORD-${y}${m}${d}-${random}`
+
+}
+
 function sendWhatsApp(){
+
+const canvas=document.getElementById("fullCanvas")
+
+const link=document.createElement("a")
+link.download="preview-selempang.jpg"
+link.href=canvas.toDataURL("image/jpeg",0.95)
+link.click()
 
 let bahan=document.getElementById("warna").src.split("Bahan_")[1].replace(".png","")
 let nama=document.getElementById("namaGelar").value || "-"
 
+let orderID=generateOrderID()
+
+let tanggal=new Date().toLocaleDateString("id-ID")
+
 let pesan=
 `Halo saya ingin memesan selempang wisuda
+
+Kode Order : ${orderID}
+Tanggal : ${tanggal}
 
 Nama & Gelar : ${nama}
 Bahan : ${bahan}
 Model : ${model}
 Bordir : ${bordir}
-Motif : ${motif.replace("Motif_","")}`
+Motif : ${motif.replace("Motif_","")}
+
+(Gambar desain sudah saya lampirkan)`
 
 let nomor="6281372490831"
 
 let url=`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`
 
+setTimeout(()=>{
+
 window.open(url,"_blank")
+
+},500)
 
 }
 
