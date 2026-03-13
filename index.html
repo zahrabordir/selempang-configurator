@@ -7,7 +7,7 @@
 
 <style>
 
-/* FIX AGAR SEMUA ELEMEN TIDAK MELEWATI BATAS */
+/* AGAR SEMUA ELEMEN TIDAK MELEWATI BATAS */
 *{
 box-sizing:border-box;
 }
@@ -57,7 +57,7 @@ object-fit:contain;
 #model{z-index:2}
 #motif{z-index:3}
 
-/* INPUT TEXT */
+/* FORM */
 
 .textInput{
 background:#fff;
@@ -122,10 +122,6 @@ height:60px;
 border:2px solid #ddd;
 border-radius:6px;
 object-fit:cover;
-}
-
-.thumb.active img{
-border-color:#000;
 }
 
 #submitBtn{
@@ -302,6 +298,7 @@ motifs.forEach(m=>{
 let name=m.replace("Motif_","")
 
 let div=document.createElement("div")
+
 div.className="thumb"
 
 div.onclick=()=>setMotif(m)
@@ -317,13 +314,18 @@ container.appendChild(div)
 }
 
 function setWarna(w){
-document.getElementById("warna").src="images/Bahan/Bahan_"+w+".png"
+
+document.getElementById("warna").src=
+"images/Bahan/Bahan_"+w+".png"
+
 }
 
 function setBordir(b){
+
 bordir=b
 setModel(model)
 setMotif(motif)
+
 }
 
 function setModel(n){
@@ -334,7 +336,8 @@ let file=n.startsWith("PPG_")
 ? n+"_"+bordir+".png"
 : "Model_"+n+"_"+bordir+".png"
 
-document.getElementById("model").src="images/Model/"+file
+document.getElementById("model").src=
+"images/Model/"+file
 
 }
 
@@ -343,12 +346,89 @@ function setMotif(m){
 motif=m
 
 if(m==="Motif_Polos"){
-document.getElementById("motif").src="images/Motif/Motif_Polos.png"
+
+document.getElementById("motif").src=
+"images/Motif/Motif_Polos.png"
+
 }else{
-document.getElementById("motif").src="images/Motif/"+m+"_"+bordir+".png"
+
+document.getElementById("motif").src=
+"images/Motif/"+m+"_"+bordir+".png"
+
 }
 
 }
+
+/* PREVIEW */
+
+function submitSelection(){
+
+const overlay=document.getElementById("overlay")
+const canvas=document.getElementById("fullCanvas")
+const ctx=canvas.getContext("2d")
+
+overlay.style.display="flex"
+
+const imgWarna=new Image()
+const imgModel=new Image()
+const imgMotif=new Image()
+
+imgWarna.src=document.getElementById("warna").src
+imgModel.src=document.getElementById("model").src
+imgMotif.src=document.getElementById("motif").src
+
+let loaded=0
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
+ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
+ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
+
+}
+
+[imgWarna,imgModel,imgMotif].forEach(img=>{
+
+img.onload=()=>{
+
+loaded++
+
+if(loaded===3){
+
+canvas.width=imgModel.width*2
+canvas.height=imgModel.height*2
+
+draw()
+
+}
+
+}
+
+})
+
+}
+
+function closeOverlay(){
+document.getElementById("overlay").style.display="none"
+}
+
+function downloadJPG(){
+
+const canvas=document.getElementById("fullCanvas")
+
+const link=document.createElement("a")
+
+link.download="selempang-custom.jpg"
+
+link.href=canvas.toDataURL("image/jpeg",0.95)
+
+link.click()
+
+}
+
+/* WHATSAPP */
 
 function sendWhatsApp(){
 
@@ -356,6 +436,11 @@ let kampus=document.getElementById("kampus").value
 let jurusan=document.getElementById("jurusan").value
 let classof=document.getElementById("classof").value
 let namaGelar=document.getElementById("namaGelar").value
+
+if(!namaGelar){
+alert("Isi Nama & Gelar dulu")
+return
+}
 
 let bahan=document.getElementById("warna").src.split("Bahan_")[1].replace(".png","")
 
