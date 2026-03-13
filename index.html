@@ -449,15 +449,28 @@ if(!namaGelar) return
 
 let bahan=document.getElementById("warna").src.split("Bahan_")[1].replace(".png","")
 
-let pesan=
-`Halo saya ingin memesan selempang wisuda
+let motifText = motif.replace("Motif_","")
 
-Nama & Gelar : ${namaGelar}
+let pesan =
+`Halo Kak produk ready, langsung CO dan isi format dibawah ya :
 
-Bahan : ${bahan}
-Model : ${model}
-Bordir : ${bordir}
-Motif : ${motif.replace("Motif_","")}`
+FORMAT ORDER :
+
+Motif Batik : ${motifText}
+
+Nomor Model : ${model}
+
+Warna Kain : ${bahan}
+
+Warna Tulisan : ${bordir}
+
+Warna Logo : ${bordir}
+
+Posisi A. : (logo kampus)
+Posisi B. : (nama universitas)
+Posisi C. : (Bachelor of )
+Posisi D. : (Class of )
+Posisi E. : ${namaGelar}`
 
 let nomor="6281372490831"
 
