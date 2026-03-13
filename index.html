@@ -7,6 +7,11 @@
 
 <style>
 
+/* FIX AGAR ELEMENT TIDAK MELEWATI BATAS */
+*{
+box-sizing:border-box;
+}
+
 body{
 font-family:Arial;
 margin:0;
@@ -52,7 +57,7 @@ object-fit:contain;
 #model{z-index:2}
 #motif{z-index:3}
 
-/* INPUT TEXT */
+/* FORM INPUT */
 
 .textInput{
 background:#fff;
@@ -180,8 +185,6 @@ background:#fff;
 
 <div class="container">
 
-<!-- PREVIEW + INPUT -->
-
 <div class="previewBox">
 
 <div class="preview">
@@ -193,7 +196,7 @@ background:#fff;
 <div class="textInput">
 
 <h3>Data Tulisan</h3>
-  
+
 <input id="namaGelar" placeholder="Nama & Gelar">
 <input id="kampus" placeholder="Nama Universitas">
 <input id="jurusan" placeholder="Bachelor of">
@@ -202,8 +205,6 @@ background:#fff;
 </div>
 
 </div>
-
-<!-- CONTROL PANEL -->
 
 <div class="controls">
 
@@ -237,21 +238,6 @@ background:#fff;
 <button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
 
 </div>
-</div>
-
-<!-- OVERLAY -->
-
-<div id="overlay">
-
-<button id="closeOverlay" onclick="closeOverlay()">Close</button>
-
-<canvas id="fullCanvas"></canvas>
-
-<div class="actionButtons">
-<button onclick="downloadJPG()">Unduh Gambar</button>
-<button onclick="sendWhatsApp()">Kirim WhatsApp</button>
-</div>
-
 </div>
 
 <script>
@@ -312,18 +298,13 @@ container.appendChild(div)
 }
 
 function setWarna(w){
-
-document.getElementById("warna").src=
-"images/Bahan/Bahan_"+w+".png"
-
+document.getElementById("warna").src="images/Bahan/Bahan_"+w+".png"
 }
 
 function setBordir(b){
-
 bordir=b
 setModel(model)
 setMotif(motif)
-
 }
 
 function setModel(n){
@@ -334,8 +315,7 @@ let file=n.startsWith("PPG_")
 ? n+"_"+bordir+".png"
 : "Model_"+n+"_"+bordir+".png"
 
-document.getElementById("model").src=
-"images/Model/"+file
+document.getElementById("model").src="images/Model/"+file
 
 }
 
@@ -345,186 +325,13 @@ motif=m
 
 if(m==="Motif_Polos"){
 
-document.getElementById("motif").src=
-"images/Motif/Motif_Polos.png"
+document.getElementById("motif").src="images/Motif/Motif_Polos.png"
 
 }else{
 
-document.getElementById("motif").src=
-"images/Motif/"+m+"_"+bordir+".png"
+document.getElementById("motif").src="images/Motif/"+m+"_"+bordir+".png"
 
 }
-
-}
-
-/* PREVIEW */
-
-let canvasScale=1
-let offsetX=0
-let offsetY=0
-let isDragging=false
-let startX=0
-let startY=0
-
-function submitSelection(){
-
-const overlay=document.getElementById("overlay")
-const canvas=document.getElementById("fullCanvas")
-const ctx=canvas.getContext("2d")
-
-overlay.style.display="flex"
-
-const imgWarna=new Image()
-const imgModel=new Image()
-const imgMotif=new Image()
-
-imgWarna.src=document.getElementById("warna").src
-imgModel.src=document.getElementById("model").src
-imgMotif.src=document.getElementById("motif").src
-
-let loaded=0
-
-function draw(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height)
-
-ctx.save()
-
-ctx.translate(canvas.width/2+offsetX,canvas.height/2+offsetY)
-ctx.scale(canvasScale,canvasScale)
-ctx.translate(-canvas.width/2,-canvas.height/2)
-
-ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
-ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
-ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
-
-ctx.restore()
-
-}
-
-[imgWarna,imgModel,imgMotif].forEach(img=>{
-
-img.onload=()=>{
-
-loaded++
-
-if(loaded===3){
-
-canvas.width=imgModel.width*2
-canvas.height=imgModel.height*2
-
-draw()
-
-canvas.onwheel=e=>{
-
-e.preventDefault()
-
-canvasScale+=e.deltaY>0?-0.1:0.1
-
-if(canvasScale<0.2)canvasScale=0.2
-if(canvasScale>6)canvasScale=6
-
-draw()
-
-}
-
-canvas.onmousedown=e=>{
-
-isDragging=true
-startX=e.clientX-offsetX
-startY=e.clientY-offsetY
-
-}
-
-canvas.onmousemove=e=>{
-
-if(!isDragging)return
-
-offsetX=e.clientX-startX
-offsetY=e.clientY-startY
-
-draw()
-
-}
-
-canvas.onmouseup=()=>isDragging=false
-canvas.onmouseleave=()=>isDragging=false
-
-canvas.ondblclick=()=>{
-
-canvasScale=1
-offsetX=0
-offsetY=0
-draw()
-
-}
-
-}
-
-}
-
-})
-
-}
-
-function closeOverlay(){
-
-document.getElementById("overlay").style.display="none"
-
-}
-
-function downloadJPG(){
-
-const canvas=document.getElementById("fullCanvas")
-
-const link=document.createElement("a")
-
-link.download="selempang-custom.jpg"
-
-link.href=canvas.toDataURL("image/jpeg",0.95)
-
-link.click()
-
-}
-
-/* WHATSAPP */
-
-function sendWhatsApp(){
-
-let kampus=document.getElementById("kampus").value
-let jurusan=document.getElementById("jurusan").value
-let classof=document.getElementById("classof").value
-let namaGelar=document.getElementById("namaGelar").value
-
-if(!namaGelar){
-alert("Isi Nama & Gelar dulu")
-return
-}
-
-let bahan=document.getElementById("warna").src.split("Bahan_")[1].replace(".png","")
-
-let pesan=
-`Halo Kak produk ready, langsung CO dan isi format dibawah ya :
-
-FORMAT ORDER :
-
-Motif Batik : ${motif.replace("Motif_","")}
-Nomor Model : ${model}
-Warna Kain : ${bahan}
-Warna Tulisan : ${bordir}
-Warna Logo : ${bordir}
-
-Posisi A : Logo Kampus
-Posisi B : ${kampus}
-Posisi C : ${jurusan}
-Posisi D : ${classof}
-Posisi E : ${namaGelar}`
-
-let nomor="6281372490831"
-
-let url=`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`
-
-window.open(url,"_blank")
 
 }
 
