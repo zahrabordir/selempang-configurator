@@ -7,7 +7,7 @@
 
 <style>
 
-/* FIX AGAR ELEMENT TIDAK MELEWATI BATAS */
+/* FIX AGAR SEMUA ELEMEN TIDAK MELEWATI BATAS */
 *{
 box-sizing:border-box;
 }
@@ -57,7 +57,7 @@ object-fit:contain;
 #model{z-index:2}
 #motif{z-index:3}
 
-/* FORM INPUT */
+/* INPUT TEXT */
 
 .textInput{
 background:#fff;
@@ -185,6 +185,8 @@ background:#fff;
 
 <div class="container">
 
+<!-- PREVIEW + INPUT -->
+
 <div class="previewBox">
 
 <div class="preview">
@@ -205,6 +207,8 @@ background:#fff;
 </div>
 
 </div>
+
+<!-- CONTROL PANEL -->
 
 <div class="controls">
 
@@ -238,6 +242,21 @@ background:#fff;
 <button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
 
 </div>
+</div>
+
+<!-- OVERLAY -->
+
+<div id="overlay">
+
+<button id="closeOverlay" onclick="closeOverlay()">Close</button>
+
+<canvas id="fullCanvas"></canvas>
+
+<div class="actionButtons">
+<button onclick="downloadJPG()">Unduh Gambar</button>
+<button onclick="sendWhatsApp()">Kirim WhatsApp</button>
+</div>
+
 </div>
 
 <script>
@@ -324,14 +343,44 @@ function setMotif(m){
 motif=m
 
 if(m==="Motif_Polos"){
-
 document.getElementById("motif").src="images/Motif/Motif_Polos.png"
-
 }else{
-
 document.getElementById("motif").src="images/Motif/"+m+"_"+bordir+".png"
+}
 
 }
+
+function sendWhatsApp(){
+
+let kampus=document.getElementById("kampus").value
+let jurusan=document.getElementById("jurusan").value
+let classof=document.getElementById("classof").value
+let namaGelar=document.getElementById("namaGelar").value
+
+let bahan=document.getElementById("warna").src.split("Bahan_")[1].replace(".png","")
+
+let pesan=
+`Halo Kak produk ready, langsung CO dan isi format dibawah ya :
+
+FORMAT ORDER :
+
+Motif Batik : ${motif.replace("Motif_","")}
+Nomor Model : ${model}
+Warna Kain : ${bahan}
+Warna Tulisan : ${bordir}
+Warna Logo : ${bordir}
+
+Posisi A : Logo Kampus
+Posisi B : ${kampus}
+Posisi C : ${jurusan}
+Posisi D : ${classof}
+Posisi E : ${namaGelar}`
+
+let nomor="6281372490831"
+
+let url=`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`
+
+window.open(url,"_blank")
 
 }
 
