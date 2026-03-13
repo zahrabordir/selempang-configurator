@@ -44,27 +44,6 @@ object-fit:contain;
 #model{z-index:2}
 #motif{z-index:3}
 
-#textPreview{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-pointer-events:none;
-font-weight:bold;
-z-index:4;
-}
-
-#textPreview span{
-color:#FFD700;
-text-shadow:1px 1px 2px #000;
-}
-
 .controls{
 flex:1;
 min-width:280px;
@@ -88,11 +67,6 @@ cursor:pointer;
 border-radius:5px;
 }
 
-button.active{
-background:#333;
-color:#fff;
-}
-
 button:hover{
 background:#bbb;
 }
@@ -108,7 +82,6 @@ display:flex;
 flex-direction:column;
 align-items:center;
 cursor:pointer;
-font-size:12px;
 }
 
 .thumb img{
@@ -123,17 +96,13 @@ object-fit:cover;
 border-color:#000;
 }
 
-input{
-width:100%;
-padding:8px;
-margin-bottom:8px;
-}
-
 #submitBtn{
-margin-top:10px;
+margin-top:20px;
 background:#4CAF50;
 color:#fff;
 }
+
+/* OVERLAY */
 
 #overlay{
 display:none;
@@ -153,7 +122,6 @@ flex-direction:column;
 max-width:90vw;
 max-height:90vh;
 background:#fff;
-cursor:grab;
 }
 
 #closeOverlay{
@@ -164,6 +132,7 @@ background:#fff;
 padding:10px 15px;
 border-radius:6px;
 cursor:pointer;
+z-index:10000;
 }
 
 .actionButtons{
@@ -185,13 +154,9 @@ background:#fff;
 <div class="container">
 
 <div class="preview">
-
 <img id="warna">
 <img id="model">
 <img id="motif">
-
-<div id="textPreview"></div>
-
 </div>
 
 <div class="controls">
@@ -199,17 +164,17 @@ background:#fff;
 <div class="group">
 <h3>Bahan</h3>
 <div class="options">
-<button onclick="setWarna('Hitam',this)">Hitam</button>
-<button onclick="setWarna('Maroon',this)">Maroon</button>
-<button onclick="setWarna('Navy',this)">Navy</button>
+<button onclick="setWarna('Hitam')">Hitam</button>
+<button onclick="setWarna('Maroon')">Maroon</button>
+<button onclick="setWarna('Navy')">Navy</button>
 </div>
 </div>
 
 <div class="group">
 <h3>Warna Bordir</h3>
 <div class="options">
-<button onclick="setBordir('Gold',this)">Gold</button>
-<button onclick="setBordir('Silver',this)">Silver</button>
+<button onclick="setBordir('Gold')">Gold</button>
+<button onclick="setBordir('Silver')">Silver</button>
 </div>
 </div>
 
@@ -223,24 +188,11 @@ background:#fff;
 <div class="grid" id="motifList"></div>
 </div>
 
-<div class="group">
-
-<h3>Data Tulisan</h3>
-
-<input id="namaKampus" placeholder="Nama Universitas" oninput="updateText()">
-
-<input id="jurusan" placeholder="Bachelor of" oninput="updateText()">
-
-<input id="tahun" placeholder="Class of" oninput="updateText()">
-
-<input id="namaGelar" placeholder="Nama & Gelar" oninput="updateText()">
-
-</div>
-
 <button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
 
 </div>
 </div>
+
 
 <div id="overlay">
 
@@ -273,11 +225,6 @@ const motifs=[
 "Motif_Simpul"
 ]
 
-function setActive(parent,el){
-[...parent.children].forEach(b=>b.classList.remove("active"))
-if(el) el.classList.add("active")
-}
-
 function loadModels(){
 
 const container=document.getElementById("modelOptions")
@@ -286,11 +233,7 @@ models.forEach(m=>{
 
 let btn=document.createElement("button")
 btn.innerText=m
-
-btn.onclick=()=>{
-setModel(m)
-setActive(container,btn)
-}
+btn.onclick=()=>setModel(m)
 
 container.appendChild(btn)
 
@@ -309,11 +252,7 @@ let name=m.replace("Motif_","")
 let div=document.createElement("div")
 div.className="thumb"
 
-div.onclick=()=>{
-setMotif(m)
-[...container.children].forEach(t=>t.classList.remove("active"))
-div.classList.add("active")
-}
+div.onclick=()=>setMotif(m)
 
 div.innerHTML=
 `<img src="images/Thumb/${m}_thumb.png">
@@ -325,20 +264,18 @@ container.appendChild(div)
 
 }
 
-function setWarna(w,btn){
+function setWarna(w){
 
-document.getElementById("warna").src="images/Bahan/Bahan_"+w+".png"
-setActive(btn.parentElement,btn)
+document.getElementById("warna").src=
+"images/Bahan/Bahan_"+w+".png"
 
 }
 
-function setBordir(b,btn){
+function setBordir(b){
 
 bordir=b
 setModel(model)
 setMotif(motif)
-
-setActive(btn.parentElement,btn)
 
 }
 
@@ -350,7 +287,8 @@ let file=n.startsWith("PPG_")
 ? n+"_"+bordir+".png"
 : "Model_"+n+"_"+bordir+".png"
 
-document.getElementById("model").src="images/Model/"+file
+document.getElementById("model").src=
+"images/Model/"+file
 
 }
 
@@ -359,32 +297,27 @@ function setMotif(m){
 motif=m
 
 if(m==="Motif_Polos"){
-document.getElementById("motif").src="images/Motif/Motif_Polos.png"
+
+document.getElementById("motif").src=
+"images/Motif/Motif_Polos.png"
+
 }else{
-document.getElementById("motif").src="images/Motif/"+m+"_"+bordir+".png"
-}
+
+document.getElementById("motif").src=
+"images/Motif/"+m+"_"+bordir+".png"
 
 }
 
-function updateText(){
-
-let kampus=document.getElementById("namaKampus").value
-let jurusan=document.getElementById("jurusan").value
-let tahun=document.getElementById("tahun").value
-let nama=document.getElementById("namaGelar").value
-
-let box=document.getElementById("textPreview")
-
-box.innerHTML=`
-<span style="font-size:18px">${kampus}</span>
-<span style="font-size:16px">${jurusan}</span>
-<span style="font-size:14px">${tahun}</span>
-<span style="font-size:20px">${nama}</span>
-`
-
 }
 
-/* CANVAS PREVIEW */
+/* PREVIEW */
+
+let canvasScale=1
+let offsetX=0
+let offsetY=0
+let isDragging=false
+let startX=0
+let startY=0
 
 function submitSelection(){
 
@@ -408,9 +341,17 @@ function draw(){
 
 ctx.clearRect(0,0,canvas.width,canvas.height)
 
+ctx.save()
+
+ctx.translate(canvas.width/2+offsetX,canvas.height/2+offsetY)
+ctx.scale(canvasScale,canvasScale)
+ctx.translate(-canvas.width/2,-canvas.height/2)
+
 ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
+
+ctx.restore()
 
 }
 
@@ -427,6 +368,52 @@ canvas.height=imgModel.height*2
 
 draw()
 
+canvas.onwheel=e=>{
+
+e.preventDefault()
+
+canvasScale+=e.deltaY>0?-0.1:0.1
+
+if(canvasScale<0.2)canvasScale=0.2
+if(canvasScale>6)canvasScale=6
+
+draw()
+
+}
+
+canvas.onmousedown=e=>{
+
+isDragging=true
+
+startX=e.clientX-offsetX
+startY=e.clientY-offsetY
+
+}
+
+canvas.onmousemove=e=>{
+
+if(!isDragging)return
+
+offsetX=e.clientX-startX
+offsetY=e.clientY-startY
+
+draw()
+
+}
+
+canvas.onmouseup=()=>isDragging=false
+canvas.onmouseleave=()=>isDragging=false
+
+canvas.ondblclick=()=>{
+
+canvasScale=1
+offsetX=0
+offsetY=0
+
+draw()
+
+}
+
 }
 
 }
@@ -436,7 +423,9 @@ draw()
 }
 
 function closeOverlay(){
+
 document.getElementById("overlay").style.display="none"
+
 }
 
 function downloadJPG(){
@@ -455,38 +444,20 @@ link.click()
 
 function sendWhatsApp(){
 
-let namaKampus=document.getElementById("namaKampus").value
-let jurusan=document.getElementById("jurusan").value
-let tahun=document.getElementById("tahun").value
-let namaGelar=document.getElementById("namaGelar").value
-
-if(!namaKampus || !namaGelar){
-
-alert("Silakan isi data terlebih dahulu")
-return
-
-}
+let namaGelar = prompt("Masukkan Nama dan Gelar (contoh: Siti Aisyah, S.Pd)")
+if(!namaGelar) return
 
 let bahan=document.getElementById("warna").src.split("Bahan_")[1].replace(".png","")
 
-let motifText = motif.replace("Motif_","")
+let pesan=
+`Halo saya ingin memesan selempang wisuda
 
-let pesan =
-`Halo Kak produk ready, langsung CO dan isi format dibawah ya :
+Nama & Gelar : ${namaGelar}
 
-FORMAT ORDER :
-
-Motif Batik : ${motifText}
-Nomor Model : ${model}
-Warna Kain : ${bahan}
-Warna Tulisan : ${bordir}
-Warna Logo : ${bordir}
-
-Posisi A. : (logo kampus)
-Posisi B. : ${namaKampus}
-Posisi C. : ${jurusan}
-Posisi D. : ${tahun}
-Posisi E. : ${namaGelar}`
+Bahan : ${bahan}
+Model : ${model}
+Bordir : ${bordir}
+Motif : ${motif.replace("Motif_","")}`
 
 let nomor="6281372490831"
 
