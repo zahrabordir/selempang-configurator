@@ -22,9 +22,17 @@ flex-wrap:wrap;
 gap:40px;
 }
 
-.preview{
+/* PREVIEW */
+
+.previewBox{
 flex:1;
-min-width:300px;
+min-width:320px;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.preview{
 position:relative;
 aspect-ratio:1/1;
 border:1px solid #ccc;
@@ -43,6 +51,25 @@ object-fit:contain;
 #warna{z-index:1}
 #model{z-index:2}
 #motif{z-index:3}
+
+/* INPUT TEXT */
+
+.textInput{
+background:#fff;
+padding:15px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+.textInput input{
+width:100%;
+padding:10px;
+margin-bottom:8px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+/* CONTROLS */
 
 .controls{
 flex:1;
@@ -153,11 +180,30 @@ background:#fff;
 
 <div class="container">
 
+<!-- PREVIEW + INPUT -->
+
+<div class="previewBox">
+
 <div class="preview">
 <img id="warna">
 <img id="model">
 <img id="motif">
 </div>
+
+<div class="textInput">
+
+<h3>Data Tulisan</h3>
+
+<input id="kampus" placeholder="Nama Universitas">
+<input id="jurusan" placeholder="Bachelor of">
+<input id="classof" placeholder="Class of">
+<input id="namaGelar" placeholder="Nama & Gelar">
+
+</div>
+
+</div>
+
+<!-- CONTROL PANEL -->
 
 <div class="controls">
 
@@ -193,6 +239,7 @@ background:#fff;
 </div>
 </div>
 
+<!-- OVERLAY -->
 
 <div id="overlay">
 
@@ -384,7 +431,6 @@ draw()
 canvas.onmousedown=e=>{
 
 isDragging=true
-
 startX=e.clientX-offsetX
 startY=e.clientY-offsetY
 
@@ -409,7 +455,6 @@ canvas.ondblclick=()=>{
 canvasScale=1
 offsetX=0
 offsetY=0
-
 draw()
 
 }
@@ -442,22 +487,38 @@ link.click()
 
 }
 
+/* WHATSAPP */
+
 function sendWhatsApp(){
 
-let namaGelar = prompt("Masukkan Nama dan Gelar (contoh: Siti Aisyah, S.Pd)")
-if(!namaGelar) return
+let kampus=document.getElementById("kampus").value
+let jurusan=document.getElementById("jurusan").value
+let classof=document.getElementById("classof").value
+let namaGelar=document.getElementById("namaGelar").value
+
+if(!namaGelar){
+alert("Isi Nama & Gelar dulu")
+return
+}
 
 let bahan=document.getElementById("warna").src.split("Bahan_")[1].replace(".png","")
 
 let pesan=
-`Halo saya ingin memesan selempang wisuda
+`Halo Kak produk ready, langsung CO dan isi format dibawah ya :
 
-Nama & Gelar : ${namaGelar}
+FORMAT ORDER :
 
-Bahan : ${bahan}
-Model : ${model}
-Bordir : ${bordir}
-Motif : ${motif.replace("Motif_","")}`
+Motif Batik : ${motif.replace("Motif_","")}
+Nomor Model : ${model}
+Warna Kain : ${bahan}
+Warna Tulisan : ${bordir}
+Warna Logo : ${bordir}
+
+Posisi A : Logo Kampus
+Posisi B : ${kampus}
+Posisi C : Bachelor of ${jurusan}
+Posisi D : Class of ${classof}
+Posisi E : ${namaGelar}`
 
 let nomor="6281372490831"
 
