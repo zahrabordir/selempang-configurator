@@ -100,6 +100,22 @@ border:1px solid #ccc;
 border-radius:5px;
 }
 
+/* TOMBOL LIHAT HASIL */
+#submitBtn{
+margin-top:15px;
+width:100%;
+background:#4CAF50;
+color:#fff;
+padding:12px;
+font-size:16px;
+border-radius:6px;
+cursor:pointer;
+}
+
+#submitBtn:hover{
+background:#43a047;
+}
+
 /* GRID MOTIF */
 .grid{
 display:flex;
@@ -120,12 +136,6 @@ height:60px;
 border:2px solid #ddd;
 border-radius:6px;
 object-fit:cover;
-}
-
-#submitBtn{
-margin-top:20px;
-background:#4CAF50;
-color:#fff;
 }
 
 /* OVERLAY */
@@ -217,8 +227,6 @@ background:#fff;
 <div class="grid" id="motifList"></div>
 </div>
 
-<button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
-
 </div>
 
 <!-- KANAN: INPUT -->
@@ -230,6 +238,8 @@ background:#fff;
 <input id="kampus" placeholder="Nama Universitas">
 <input id="jurusan" placeholder="Bachelor of">
 <input id="classof" placeholder="Class of">
+
+<button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
 
 </div>
 
