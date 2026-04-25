@@ -7,10 +7,8 @@
 
 <style>
 
-/* AGAR SEMUA ELEMEN TIDAK MELEWATI BATAS */
-*{
-box-sizing:border-box;
-}
+/* GLOBAL */
+*{box-sizing:border-box;}
 
 body{
 font-family:Arial;
@@ -18,23 +16,21 @@ margin:0;
 background:#f2f2f2;
 }
 
+/* LAYOUT 3 KOLOM */
 .container{
 max-width:1200px;
 margin:auto;
 padding:30px;
 display:flex;
 flex-wrap:wrap;
-gap:40px;
+gap:30px;
+align-items:flex-start;
 }
 
 /* PREVIEW */
-
 .previewBox{
 flex:1;
 min-width:320px;
-display:flex;
-flex-direction:column;
-gap:15px;
 }
 
 .preview{
@@ -57,25 +53,7 @@ object-fit:contain;
 #model{z-index:2}
 #motif{z-index:3}
 
-/* FORM */
-
-.textInput{
-background:#fff;
-padding:15px;
-border:1px solid #ccc;
-border-radius:6px;
-}
-
-.textInput input{
-width:100%;
-padding:10px;
-margin-bottom:8px;
-border:1px solid #ccc;
-border-radius:5px;
-}
-
-/* CONTROLS */
-
+/* CONTROL */
 .controls{
 flex:1;
 min-width:280px;
@@ -103,6 +81,26 @@ button:hover{
 background:#bbb;
 }
 
+/* INPUT KANAN */
+.textInput{
+flex:1;
+min-width:280px;
+background:#fff;
+padding:15px;
+border:1px solid #ccc;
+border-radius:6px;
+height:fit-content;
+}
+
+.textInput input{
+width:100%;
+padding:10px;
+margin-bottom:8px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+/* GRID MOTIF */
 .grid{
 display:flex;
 flex-wrap:wrap;
@@ -131,7 +129,6 @@ color:#fff;
 }
 
 /* OVERLAY */
-
 #overlay{
 display:none;
 position:fixed;
@@ -181,31 +178,16 @@ background:#fff;
 
 <div class="container">
 
-<!-- PREVIEW + INPUT -->
-
+<!-- KIRI: PREVIEW -->
 <div class="previewBox">
-
 <div class="preview">
 <img id="warna">
 <img id="model">
 <img id="motif">
 </div>
-
-<div class="textInput">
-
-<h3>Data Tulisan</h3>
-
-<input id="namaGelar" placeholder="Nama & Gelar">
-<input id="kampus" placeholder="Nama Universitas">
-<input id="jurusan" placeholder="Bachelor of">
-<input id="classof" placeholder="Class of">
-
 </div>
 
-</div>
-
-<!-- CONTROL PANEL -->
-
+<!-- TENGAH: CONTROL -->
 <div class="controls">
 
 <div class="group">
@@ -238,10 +220,22 @@ background:#fff;
 <button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
 
 </div>
+
+<!-- KANAN: INPUT -->
+<div class="textInput">
+
+<h3>Data Tulisan</h3>
+
+<input id="namaGelar" placeholder="Nama & Gelar">
+<input id="kampus" placeholder="Nama Universitas">
+<input id="jurusan" placeholder="Bachelor of">
+<input id="classof" placeholder="Class of">
+
+</div>
+
 </div>
 
 <!-- OVERLAY -->
-
 <div id="overlay">
 
 <button id="closeOverlay" onclick="closeOverlay()">Close</button>
@@ -274,94 +268,63 @@ const motifs=[
 ]
 
 function loadModels(){
-
 const container=document.getElementById("modelOptions")
-
 models.forEach(m=>{
-
 let btn=document.createElement("button")
 btn.innerText=m
 btn.onclick=()=>setModel(m)
-
 container.appendChild(btn)
-
 })
-
 }
 
 function loadMotifs(){
-
 const container=document.getElementById("motifList")
-
 motifs.forEach(m=>{
-
 let name=m.replace("Motif_","")
-
 let div=document.createElement("div")
-
 div.className="thumb"
-
 div.onclick=()=>setMotif(m)
-
-div.innerHTML=
-`<img src="images/Thumb/${m}_thumb.png">
-<span>${name}</span>`
-
+div.innerHTML=`<img src="images/Thumb/${m}_thumb.png"><span>${name}</span>`
 container.appendChild(div)
-
 })
-
 }
 
 function setWarna(w){
-
-document.getElementById("warna").src=
-"images/Bahan/Bahan_"+w+".png"
-
+document.getElementById("warna").src="images/Bahan/Bahan_"+w+".png"
 }
 
 function setBordir(b){
-
 bordir=b
 setModel(model)
 setMotif(motif)
-
 }
 
 function setModel(n){
-
 model=n
-
-let file=n.startsWith("PPG_")
-? n+"_"+bordir+".png"
-: "Model_"+n+"_"+bordir+".png"
-
-document.getElementById("model").src=
-"images/Model/"+file
-
+let file=n.startsWith("PPG_") ? n+"_"+bordir+".png" : "Model_"+n+"_"+bordir+".png"
+document.getElementById("model").src="images/Model/"+file
 }
 
 function setMotif(m){
-
 motif=m
-
 if(m==="Motif_Polos"){
-
-document.getElementById("motif").src=
-"images/Motif/Motif_Polos.png"
-
+document.getElementById("motif").src="images/Motif/Motif_Polos.png"
 }else{
-
-document.getElementById("motif").src=
-"images/Motif/"+m+"_"+bordir+".png"
-
+document.getElementById("motif").src="images/Motif/"+m+"_"+bordir+".png"
+}
 }
 
+/* LOAD IMAGE AMAN */
+function loadImage(src){
+return new Promise(resolve=>{
+const img=new Image()
+img.onload=()=>resolve(img)
+img.src=src
+})
 }
 
 /* PREVIEW */
-
-function submitSelection(){
+async function submitSelection(){
 
 const overlay=document.getElementById("overlay")
 const canvas=document.getElementById("fullCanvas")
@@ -369,44 +332,26 @@ const ctx=canvas.getContext("2d")
 
 overlay.style.display="flex"
 
-const imgWarna=new Image()
-const imgModel=new Image()
-const imgMotif=new Image()
+const imgWarna=await loadImage(document.getElementById("warna").src)
+const imgModel=await loadImage(document.getElementById("model").src)
+const imgMotif=await loadImage(document.getElementById("motif").src)
 
-imgWarna.src=document.getElementById("warna").src
-imgModel.src=document.getElementById("model").src
-imgMotif.src=document.getElementById("motif").src
-
-let loaded=0
-
-function draw(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height)
+canvas.width=imgModel.width*2
+canvas.height=imgModel.height*2
 
 ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
 
-}
+/* TEXT */
+ctx.fillStyle = bordir === "Gold" ? "#D4AF37" : "#C0C0C0"
+ctx.font = "bold 60px Arial"
+ctx.textAlign = "center"
 
-[imgWarna,imgModel,imgMotif].forEach(img=>{
-
-img.onload=()=>{
-
-loaded++
-
-if(loaded===3){
-
-canvas.width=imgModel.width*2
-canvas.height=imgModel.height*2
-
-draw()
-
-}
-
-}
-
-})
+ctx.fillText(document.getElementById("kampus").value, canvas.width/2, 200)
+ctx.fillText(document.getElementById("jurusan").value, canvas.width/2, 300)
+ctx.fillText(document.getElementById("classof").value, canvas.width/2, 400)
+ctx.fillText(document.getElementById("namaGelar").value, canvas.width/2, 500)
 
 }
 
@@ -415,21 +360,14 @@ document.getElementById("overlay").style.display="none"
 }
 
 function downloadJPG(){
-
 const canvas=document.getElementById("fullCanvas")
-
 const link=document.createElement("a")
-
 link.download="selempang-custom.jpg"
-
 link.href=canvas.toDataURL("image/jpeg",0.95)
-
 link.click()
-
 }
 
 /* WHATSAPP */
-
 function sendWhatsApp(){
 
 let kampus=document.getElementById("kampus").value
@@ -442,27 +380,27 @@ alert("Isi Format Order dulu")
 return
 }
 
-let bahan=document.getElementById("warna").src.split("Bahan_")[1].replace(".png","")
+let warnaSrc=document.getElementById("warna").src
+if(!warnaSrc){
+alert("Pilih warna kain dulu")
+return
+}
 
-let pesan=
-`Halo Kak, saya mau pesan selempang wisuda dengan format berikut :
+let bahan=warnaSrc.split("Bahan_")[1].replace(".png","")
 
-FORMAT ORDER :
+let pesan=`Halo Kak, saya mau pesan selempang wisuda:
 
-Motif Batik : ${motif.replace("Motif_","")}
-Nomor Model : ${model}
+Motif : ${motif.replace("Motif_","")}
+Model : ${model}
 Warna Kain : ${bahan}
 Warna Tulisan : ${bordir}
-Warna Logo : ${bordir}
 
-Posisi A : Logo Kampus
-Posisi B : ${kampus}
-Posisi C : ${jurusan}
-Posisi D : ${classof}
-Posisi E : ${namaGelar}`
+Kampus : ${kampus}
+Jurusan : ${jurusan}
+Class : ${classof}
+Nama : ${namaGelar}`
 
 let nomor="6281372490831"
-
 let url=`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`
 
 window.open(url,"_blank")
