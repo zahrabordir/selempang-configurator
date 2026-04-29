@@ -6,8 +6,6 @@
 <title>Custom Selempang Wisuda</title>
 
 <style>
-
-/* GLOBAL */
 *{box-sizing:border-box;}
 
 body{
@@ -16,7 +14,6 @@ margin:0;
 background:#f2f2f2;
 }
 
-/* LAYOUT 3 KOLOM */
 .container{
 max-width:1200px;
 margin:auto;
@@ -27,11 +24,7 @@ gap:30px;
 align-items:flex-start;
 }
 
-/* PREVIEW */
-.previewBox{
-flex:1;
-min-width:320px;
-}
+.previewBox{flex:1;min-width:320px;}
 
 .preview{
 position:relative;
@@ -42,10 +35,8 @@ background:#fff;
 
 .preview img{
 position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
+top:0;left:0;
+width:100%;height:100%;
 object-fit:contain;
 }
 
@@ -53,21 +44,11 @@ object-fit:contain;
 #model{z-index:2}
 #motif{z-index:3}
 
-/* CONTROL */
-.controls{
-flex:1;
-min-width:280px;
-}
+.controls{flex:1;min-width:280px;}
 
-.group{
-margin-bottom:25px;
-}
+.group{margin-bottom:25px;}
 
-.options{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-}
+.options{display:flex;flex-wrap:wrap;gap:10px;}
 
 button{
 padding:8px 12px;
@@ -77,11 +58,8 @@ cursor:pointer;
 border-radius:5px;
 }
 
-button:hover{
-background:#bbb;
-}
+button:hover{background:#bbb;}
 
-/* INPUT KANAN */
 .textInput{
 flex:1;
 min-width:280px;
@@ -89,7 +67,6 @@ background:#fff;
 padding:15px;
 border:1px solid #ccc;
 border-radius:6px;
-height:fit-content;
 }
 
 .textInput input{
@@ -100,7 +77,6 @@ border:1px solid #ccc;
 border-radius:5px;
 }
 
-/* TOMBOL LIHAT HASIL */
 #submitBtn{
 margin-top:15px;
 width:100%;
@@ -112,40 +88,11 @@ border-radius:6px;
 cursor:pointer;
 }
 
-#submitBtn:hover{
-background:#43a047;
-}
-
-/* GRID MOTIF */
-.grid{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-}
-
-.thumb{
-display:flex;
-flex-direction:column;
-align-items:center;
-cursor:pointer;
-}
-
-.thumb img{
-width:60px;
-height:60px;
-border:2px solid #ddd;
-border-radius:6px;
-object-fit:cover;
-}
-
-/* OVERLAY */
 #overlay{
 display:none;
 position:fixed;
-top:0;
-left:0;
-width:100vw;
-height:100vh;
+top:0;left:0;
+width:100vw;height:100vh;
 background:rgba(0,0,0,0.95);
 z-index:9999;
 justify-content:center;
@@ -164,10 +111,8 @@ position:fixed;
 top:20px;
 right:20px;
 background:#fff;
-padding:10px 15px;
-border-radius:6px;
+padding:10px;
 cursor:pointer;
-z-index:10000;
 }
 
 .actionButtons{
@@ -176,11 +121,6 @@ bottom:30px;
 display:flex;
 gap:10px;
 }
-
-.actionButtons button{
-background:#fff;
-}
-
 </style>
 </head>
 
@@ -188,7 +128,6 @@ background:#fff;
 
 <div class="container">
 
-<!-- KIRI: PREVIEW -->
 <div class="previewBox">
 <div class="preview">
 <img id="warna">
@@ -197,7 +136,6 @@ background:#fff;
 </div>
 </div>
 
-<!-- TENGAH: CONTROL -->
 <div class="controls">
 
 <div class="group">
@@ -224,39 +162,30 @@ background:#fff;
 
 <div class="group">
 <h3>Motif</h3>
-<div class="grid" id="motifList"></div>
+<div class="options" id="motifList"></div>
 </div>
 
 </div>
 
-<!-- KANAN: INPUT -->
 <div class="textInput">
-
-<h3>Data Tulisan</h3>
-
+<h3>Data Tulisan (tidak ditampilkan di hasil)</h3>
 <input id="namaGelar" placeholder="Nama & Gelar">
 <input id="kampus" placeholder="Nama Universitas">
 <input id="jurusan" placeholder="Jurusan">
-<input id="classof" placeholder="Angkatan">
-
+<input id="classof" placeholder="Class Of">
 <button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
-
 </div>
 
 </div>
 
-<!-- OVERLAY -->
 <div id="overlay">
-
 <button id="closeOverlay" onclick="closeOverlay()">Close</button>
-
 <canvas id="fullCanvas"></canvas>
 
 <div class="actionButtons">
 <button onclick="downloadJPG()">Unduh Gambar</button>
 <button onclick="sendWhatsApp()">Kirim WhatsApp</button>
 </div>
-
 </div>
 
 <script>
@@ -265,17 +194,8 @@ let model="1"
 let bordir="Gold"
 let motif="Motif_Kait"
 
-const models=["1","2","3","4","5","6","7","8","9","PPG_1","PPG_2","PPG_3"]
-
-const motifs=[
-"Motif_Daun",
-"Motif_Flora",
-"Motif_Kait",
-"Motif_Klasik",
-"Motif_Polos",
-"Motif_Serat",
-"Motif_Simpul"
-]
+const models=["1","2","3","4","5"]
+const motifs=["Motif_Daun","Motif_Kait","Motif_Polos"]
 
 function loadModels(){
 const container=document.getElementById("modelOptions")
@@ -290,12 +210,10 @@ container.appendChild(btn)
 function loadMotifs(){
 const container=document.getElementById("motifList")
 motifs.forEach(m=>{
-let name=m.replace("Motif_","")
-let div=document.createElement("div")
-div.className="thumb"
-div.onclick=()=>setMotif(m)
-div.innerHTML=`<img src="images/Thumb/${m}_thumb.png"><span>${name}</span>`
-container.appendChild(div)
+let btn=document.createElement("button")
+btn.innerText=m.replace("Motif_","")
+btn.onclick=()=>setMotif(m)
+container.appendChild(btn)
 })
 }
 
@@ -311,20 +229,14 @@ setMotif(motif)
 
 function setModel(n){
 model=n
-let file=n.startsWith("PPG_") ? n+"_"+bordir+".png" : "Model_"+n+"_"+bordir+".png"
-document.getElementById("model").src="images/Model/"+file
+document.getElementById("model").src="images/Model/Model_"+n+"_"+bordir+".png"
 }
 
 function setMotif(m){
 motif=m
-if(m==="Motif_Polos"){
-document.getElementById("motif").src="images/Motif/Motif_Polos.png"
-}else{
 document.getElementById("motif").src="images/Motif/"+m+"_"+bordir+".png"
 }
-}
 
-/* LOAD IMAGE AMAN */
 function loadImage(src){
 return new Promise(resolve=>{
 const img=new Image()
@@ -333,96 +245,68 @@ img.src=src
 })
 }
 
-/* PREVIEW */
 async function submitSelection(){
 
-const overlay=document.getElementById("overlay")
+if(!warna.src || !model.src || !motif.src){
+alert("Lengkapi pilihan dulu")
+return
+}
+
 const canvas=document.getElementById("fullCanvas")
 const ctx=canvas.getContext("2d")
 
-overlay.style.display="flex"
+document.getElementById("overlay").style.display="flex"
 
-const imgWarna=await loadImage(document.getElementById("warna").src)
-const imgModel=await loadImage(document.getElementById("model").src)
-const imgMotif=await loadImage(document.getElementById("motif").src)
+const imgWarna=await loadImage(warna.src)
+const imgModel=await loadImage(model.src)
+const imgMotif=await loadImage(motif.src)
 
-canvas.width=imgModel.width*2
-canvas.height=imgModel.height*2
+/* RESOLUSI */
+const scale=2
+canvas.width=imgModel.width*scale
+canvas.height=imgModel.height*scale
+ctx.scale(scale,scale)
 
-ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
-ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
-ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
+/* BACKGROUND PUTIH */
+ctx.fillStyle="#ffffff"
+ctx.fillRect(0,0,canvas.width,canvas.height)
 
-/* TEXT */
-ctx.fillStyle = bordir === "Gold" ? "#D4AF37" : "#C0C0C0"
-ctx.font = "bold 60px Arial"
-ctx.textAlign = "center"
-
-ctx.fillText(document.getElementById("kampus").value, canvas.width/2, 200)
-ctx.fillText(document.getElementById("jurusan").value, canvas.width/2, 300)
-ctx.fillText(document.getElementById("classof").value, canvas.width/2, 400)
-ctx.fillText(document.getElementById("namaGelar").value, canvas.width/2, 500)
+/* GAMBAR SAJA (TANPA TEXT) */
+ctx.drawImage(imgWarna,0,0)
+ctx.drawImage(imgModel,0,0)
+ctx.drawImage(imgMotif,0,0)
 
 }
 
 function closeOverlay(){
-document.getElementById("overlay").style.display="none"
+overlay.style.display="none"
 }
 
 function downloadJPG(){
-const canvas=document.getElementById("fullCanvas")
 const link=document.createElement("a")
-link.download="selempang-custom.jpg"
-link.href=canvas.toDataURL("image/jpeg",0.95)
+link.download="selempang.jpg"
+link.href=fullCanvas.toDataURL("image/jpeg",0.95)
 link.click()
 }
 
-/* WHATSAPP */
 function sendWhatsApp(){
 
-let kampus=document.getElementById("kampus").value
-let jurusan=document.getElementById("jurusan").value
-let classof=document.getElementById("classof").value
-let namaGelar=document.getElementById("namaGelar").value
+let pesan=`Halo Kak, saya mau pesan selempang:
 
-if(!namaGelar){
-alert("Isi Format Order dulu")
-return
-}
+Motif: ${motif}
+Model: ${model}
+Warna Bordir: ${bordir}
 
-let warnaSrc=document.getElementById("warna").src
-if(!warnaSrc){
-alert("Pilih warna kain dulu")
-return
-}
+Nama: ${namaGelar.value}
+Kampus: ${kampus.value}
+Jurusan: ${jurusan.value}
+Class: ${classof.value}`
 
-let bahan=warnaSrc.split("Bahan_")[1].replace(".png","")
-
-let pesan=`Halo Kak, saya mau pesan selempang wisuda:
-
-Motif : ${motif.replace("Motif_","")}
-Model : ${model}
-Warna Kain : ${bahan}
-Warna Tulisan : ${bordir}
-
-Kampus : ${kampus}
-Jurusan : ${jurusan}
-Class : ${classof}
-Nama : ${namaGelar}`
-
-let nomor="6281372490831"
-let url=`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`
-
-window.open(url,"_blank")
-
+window.open(`https://wa.me/6281372490831?text=${encodeURIComponent(pesan)}`)
 }
 
 loadModels()
 loadMotifs()
-
-setWarna("Navy")
-setModel("1")
-setMotif("Motif_Kait")
 
 </script>
 
