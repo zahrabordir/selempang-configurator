@@ -267,29 +267,28 @@ const modelEl=document.getElementById("model")
 const motifEl=document.getElementById("motif")
 
 if(!warnaEl.src || !modelEl.src || !motifEl.src){
-alert("Lengkapi pilihan dulu")
+alert("Lengkapi dulu")
 return
 }
 
-// load dulu
 const imgWarna=await loadImage(warnaEl.src)
 const imgModel=await loadImage(modelEl.src)
 const imgMotif=await loadImage(motifEl.src)
 
-// canvas
-canvas.width=imgModel.width*2
-canvas.height=imgModel.height*2
+// 🔥 gunakan ukuran asli (lebih tajam & pas)
+canvas.width = imgModel.width
+canvas.height = imgModel.height
 
-// background putih
+// putih
 ctx.fillStyle="#fff"
 ctx.fillRect(0,0,canvas.width,canvas.height)
 
 // gambar
-ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
-ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
-ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
+ctx.drawImage(imgWarna,0,0)
+ctx.drawImage(imgModel,0,0)
+ctx.drawImage(imgMotif,0,0)
 
-// tampilkan setelah selesai
+// tampilkan terakhir
 overlay.style.display="flex"
 
 }
