@@ -353,16 +353,6 @@ ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
 
-/* TEXT */
-ctx.fillStyle = bordir === "Gold" ? "#D4AF37" : "#C0C0C0"
-ctx.font = "bold 60px Arial"
-ctx.textAlign = "center"
-
-ctx.fillText(document.getElementById("kampus").value, canvas.width/2, 200)
-ctx.fillText(document.getElementById("jurusan").value, canvas.width/2, 300)
-ctx.fillText(document.getElementById("classof").value, canvas.width/2, 400)
-ctx.fillText(document.getElementById("namaGelar").value, canvas.width/2, 500)
-
 }
 
 function closeOverlay(){
