@@ -23,16 +23,14 @@ flex-wrap:wrap;
 gap:30px;
 }
 
-.previewBox{
-flex:1;
-min-width:320px;
-}
-
+/* PREVIEW */
 .preview{
 position:relative;
 aspect-ratio:1/1;
-border:1px solid #ccc;
 background:#fff;
+border:1px solid #ccc;
+flex:1;
+min-width:300px;
 }
 
 .preview img{
@@ -46,6 +44,7 @@ object-fit:contain;
 #model{z-index:2}
 #motif{z-index:3}
 
+/* CONTROL */
 .controls,.textInput{
 flex:1;
 min-width:280px;
@@ -70,6 +69,7 @@ padding:12px;
 margin-top:10px;
 }
 
+/* GRID MOTIF */
 .grid{
 display:flex;
 flex-wrap:wrap;
@@ -88,6 +88,7 @@ border:1px solid #ccc;
 border-radius:5px;
 }
 
+/* OVERLAY */
 #overlay{
 display:none;
 position:fixed;
@@ -104,6 +105,15 @@ flex-direction:column;
 background:#fff;
 max-width:90vw;
 max-height:90vh;
+}
+
+#closeOverlay{
+position:fixed;
+top:20px;
+right:20px;
+background:#fff;
+padding:10px;
+cursor:pointer;
 }
 
 .actionButtons{
@@ -124,17 +134,14 @@ background:#fff;
 <div class="container">
 
 <!-- PREVIEW -->
-<div class="previewBox">
 <div class="preview">
 <img id="warna">
 <img id="model">
 <img id="motif">
 </div>
-</div>
 
 <!-- CONTROL -->
 <div class="controls">
-
 <h3>Bahan</h3>
 <button onclick="setWarna('Hitam')">Hitam</button>
 <button onclick="setWarna('Maroon')">Maroon</button>
@@ -149,17 +156,15 @@ background:#fff;
 
 <h3>Motif</h3>
 <div class="grid" id="motifList"></div>
-
 </div>
 
 <!-- INPUT -->
 <div class="textInput">
-<h3>Data Isian</h3>
+<h3>Data (untuk WA)</h3>
 <input id="namaGelar" placeholder="Nama">
 <input id="kampus" placeholder="Kampus">
 <input id="jurusan" placeholder="Jurusan">
-<input id="classof" placeholder="Class Of">
-
+<input id="classof" placeholder="Class">
 <button id="submitBtn" onclick="submitSelection()">Lihat Hasil</button>
 </div>
 
@@ -167,12 +172,16 @@ background:#fff;
 
 <!-- OVERLAY -->
 <div id="overlay">
+
+<button id="closeOverlay" onclick="closeOverlay()">Close</button>
+
 <canvas id="fullCanvas"></canvas>
 
 <div class="actionButtons">
-<button onclick="downloadJPG()">Download</button>
-<button onclick="closeOverlay()">Close</button>
+<button onclick="downloadJPG()">Unduh</button>
+<button onclick="sendWhatsApp()">Kirim WhatsApp</button>
 </div>
+
 </div>
 
 <script>
@@ -184,17 +193,12 @@ let motif="Motif_Kait"
 const models=["1","2","3","4","5","6","7","8","9","PPG_1","PPG_2","PPG_3"]
 
 const motifs=[
-"Motif_Daun",
-"Motif_Flora",
-"Motif_Kait",
-"Motif_Klasik",
-"Motif_Polos",
-"Motif_Serat",
-"Motif_Simpul"
+"Motif_Daun","Motif_Flora","Motif_Kait",
+"Motif_Klasik","Motif_Polos","Motif_Serat","Motif_Simpul"
 ]
 
 function loadModels(){
-const c=document.getElementById("modelOptions")
+let c=document.getElementById("modelOptions")
 models.forEach(m=>{
 let b=document.createElement("button")
 b.innerText=m
@@ -204,7 +208,7 @@ c.appendChild(b)
 }
 
 function loadMotifs(){
-const c=document.getElementById("motifList")
+let c=document.getElementById("motifList")
 motifs.forEach(m=>{
 let div=document.createElement("div")
 div.className="thumb"
@@ -214,13 +218,12 @@ div.innerHTML=`
 <img src="images/Thumb/${m}_thumb.png">
 <br>${m.replace("Motif_","")}
 `
-
 c.appendChild(div)
 })
 }
 
 function setWarna(w){
-document.getElementById("warna").src="images/Bahan/Bahan_"+w+".png"
+warna.src="images/Bahan/Bahan_"+w+".png"
 }
 
 function setBordir(b){
@@ -232,15 +235,16 @@ setMotif(motif)
 function setModel(n){
 model=n
 let file=n.startsWith("PPG_") ? n+"_"+bordir+".png" : "Model_"+n+"_"+bordir+".png"
-document.getElementById("model").src="images/Model/"+file
+modelEl=document.getElementById("model")
+modelEl.src="images/Model/"+file
 }
 
 function setMotif(m){
 motif=m
 if(m==="Motif_Polos"){
-document.getElementById("motif").src="images/Motif/Motif_Polos.png"
+motifEl.src="images/Motif/Motif_Polos.png"
 }else{
-document.getElementById("motif").src="images/Motif/"+m+"_"+bordir+".png"
+motifEl.src="images/Motif/"+m+"_"+bordir+".png"
 }
 }
 
@@ -254,6 +258,7 @@ img.src=src
 
 async function submitSelection(){
 
+const overlay=document.getElementById("overlay")
 const canvas=document.getElementById("fullCanvas")
 const ctx=canvas.getContext("2d")
 
@@ -266,40 +271,66 @@ alert("Lengkapi pilihan dulu")
 return
 }
 
-document.getElementById("overlay").style.display="flex"
-
+// load dulu
 const imgWarna=await loadImage(warnaEl.src)
 const imgModel=await loadImage(modelEl.src)
 const imgMotif=await loadImage(motifEl.src)
 
+// canvas
 canvas.width=imgModel.width*2
 canvas.height=imgModel.height*2
 
 // background putih
-ctx.fillStyle="#ffffff"
+ctx.fillStyle="#fff"
 ctx.fillRect(0,0,canvas.width,canvas.height)
 
-// render gambar saja
+// gambar
 ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
 
+// tampilkan setelah selesai
+overlay.style.display="flex"
+
 }
 
 function closeOverlay(){
-document.getElementById("overlay").style.display="none"
+overlay.style.display="none"
 }
 
 function downloadJPG(){
-const canvas=document.getElementById("fullCanvas")
-const link=document.createElement("a")
+let link=document.createElement("a")
+link.href=fullCanvas.toDataURL("image/jpeg",0.95)
 link.download="hasil.jpg"
-link.href=canvas.toDataURL("image/jpeg",0.95)
 link.click()
 }
 
-/* INIT FIX */
-document.addEventListener("DOMContentLoaded",function(){
+function sendWhatsApp(){
+
+let kampus=kampusInput.value
+let jurusan=jurusanInput.value
+let classof=classofInput.value
+let nama=namaGelar.value
+
+let bahan=warna.src.split("Bahan_")[1].replace(".png","")
+
+let pesan=`Halo Kak, saya mau pesan selempang:
+
+Motif: ${motif}
+Model: ${model}
+Warna Kain: ${bahan}
+Warna Bordir: ${bordir}
+
+Nama: ${nama}
+Kampus: ${kampus}
+Jurusan: ${jurusan}
+Class: ${classof}`
+
+window.open(`https://wa.me/6281372490831?text=${encodeURIComponent(pesan)}`)
+}
+
+/* INIT */
+document.addEventListener("DOMContentLoaded",()=>{
 loadModels()
 loadMotifs()
 
