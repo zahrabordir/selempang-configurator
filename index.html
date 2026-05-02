@@ -7,6 +7,37 @@
 
 <style>
 
+ .warnaBtn{
+color:#fff;
+font-weight:bold;
+}
+
+/* WARNA SESUAI NAMA */
+.hitam{
+background:#000;
+}
+
+.maroon{
+background:#800000;
+}
+
+.navy{
+background:#001f3f;
+}
+
+/* HOVER BIAR LEBIH HIDUP */
+.hitam:hover{
+background:#222;
+}
+
+.maroon:hover{
+background:#a00000;
+}
+
+.navy:hover{
+background:#003366;
+} 
+  
 /* GLOBAL */
 *{box-sizing:border-box;}
 
@@ -203,9 +234,9 @@ background:#fff;
 <div class="group">
 <h3>Bahan</h3>
 <div class="options">
-<button onclick="setWarna('Hitam')">Hitam</button>
-<button onclick="setWarna('Maroon')">Maroon</button>
-<button onclick="setWarna('Navy')">Navy</button>
+<button class="warnaBtn hitam" onclick="setWarna('Hitam')">Hitam</button>
+<button class="warnaBtn maroon" onclick="setWarna('Maroon')">Maroon</button>
+<button class="warnaBtn navy" onclick="setWarna('Navy')">Navy</button>
 </div>
 </div>
 
