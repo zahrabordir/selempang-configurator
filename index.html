@@ -406,6 +406,11 @@ const imgMotif=await loadImage(document.getElementById("motif").src)
 canvas.width=imgModel.width*2
 canvas.height=imgModel.height*2
 
+// WAJIB: isi background putih dulu
+ctx.fillStyle = "#ffffff"
+ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+// baru render gambar
 ctx.drawImage(imgWarna,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgModel,0,0,canvas.width,canvas.height)
 ctx.drawImage(imgMotif,0,0,canvas.width,canvas.height)
