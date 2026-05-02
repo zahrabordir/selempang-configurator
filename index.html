@@ -6,7 +6,33 @@
 <title>Custom Selempang Wisuda</title>
 
 <style>
+.bordirBtn{
+font-weight:bold;
+border-radius:6px;
+}
 
+/* GOLD */
+.gold{
+background:linear-gradient(145deg,#FFD700,#C9A000);
+color:#000;
+}
+
+/* SILVER */
+.silver{
+background:linear-gradient(145deg,#E0E0E0,#9E9E9E);
+color:#000;
+}
+
+/* HOVER EFFECT */
+.gold:hover{
+background:linear-gradient(145deg,#ffe44d,#b89600);
+}
+
+.silver:hover{
+background:linear-gradient(145deg,#f5f5f5,#7a7a7a);
+}
+ 
+/* WARNA TOMBOL */
  .warnaBtn{
 color:#fff;
 font-weight:bold;
@@ -243,8 +269,8 @@ background:#fff;
 <div class="group">
 <h3>Warna Bordir</h3>
 <div class="options">
-<button onclick="setBordir('Gold')">Gold</button>
-<button onclick="setBordir('Silver')">Silver</button>
+<button class="bordirBtn gold" onclick="setBordir('Gold')">Gold</button>
+<button class="bordirBtn silver" onclick="setBordir('Silver')">Silver</button>
 </div>
 </div>
 
